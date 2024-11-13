@@ -1,23 +1,20 @@
-package ru.practicum.shareit.item.dto;
-
+package ru.practicum.shareit.user.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Builder(toBuilder = true)
 @Data
 @AllArgsConstructor
-public class ItemDto {
+public class UserDto {
 
     private Long id;
 
+    @NotNull
     @NotBlank
     private String name;
 
-    @NotBlank
-    private String description;
-
     @NotNull
-    private Boolean available;
-
-    private Long requestId;
+    @NotBlank
+    @Email
+    private String email;
 }
