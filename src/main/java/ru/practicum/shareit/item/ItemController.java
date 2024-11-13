@@ -17,11 +17,11 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
 
-    private final String HEADER_USER_ID = "X-Sharer-User-Id";
+    private final String headerUserId = "X-Sharer-User-Id";
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDto> getItemsByOwner(@RequestHeader(HEADER_USER_ID) Long ownerId) {
+    public List<ItemDto> getItemsByOwner(@RequestHeader(headerUserId) Long ownerId) {
         try {
             log.info("Просмотр владельцем списка всех вещей.");
             return itemService.getItemsByOwner(ownerId);
@@ -55,9 +55,9 @@ public class ItemController {
 
     @ResponseBody
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader(HEADER_USER_ID) Long ownerId) {
+    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader(headerUserId) Long ownerId) {
         try {
-            if(ownerId == null) {
+            if (ownerId == null) {
                 throw new ValidationException("ownerId == null");
             }
             log.info("Добавление новой вещи владельцем.");
@@ -70,7 +70,7 @@ public class ItemController {
 
     @ResponseBody
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable Long itemId, @RequestHeader(HEADER_USER_ID) Long ownerId) {
+    public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable Long itemId, @RequestHeader(headerUserId) Long ownerId) {
         try {
             log.info("Изменение новой вещи владельцем.");
             return itemService.updateItem(itemDto, ownerId, itemId);
