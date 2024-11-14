@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -54,13 +55,21 @@ public class UserRepositoryImpl implements UserRepository {
         if (input == null) {
             return null;
         }
-        for (User user : users.values()) {
-            String email = user.getEmail();
-            if (email.equals(input)) {
-                return user.getId();
-            }
+        var user = users.values()
+                .stream()
+                .filter(u -> u.getEmail().equals(input))
+                .findFirst();
+
+        return user.map(User::getId).orElse(null);
+    }
+
+    @Override
+    public Boolean checkEmailExists(String input) {
+        if (input == null) {
+            return null;
         }
-        return null;
+        var emails = users.values().stream().map(User::getEmail).collect(Collectors.toSet());
+        return emails.contains(input);
     }
 }
 

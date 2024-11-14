@@ -53,7 +53,6 @@ public class ItemController {
         }
     }
 
-    @ResponseBody
     @PostMapping
     public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader(headerUserId) Long ownerId) {
         try {
@@ -68,7 +67,6 @@ public class ItemController {
         }
     }
 
-    @ResponseBody
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable Long itemId, @RequestHeader(headerUserId) Long ownerId) {
         try {

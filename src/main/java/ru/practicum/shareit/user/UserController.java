@@ -41,7 +41,6 @@ public class UserController {
         }
     }
 
-    @ResponseBody
     @PostMapping
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         try {
@@ -53,7 +52,6 @@ public class UserController {
         }
     }
 
-    @ResponseBody
     @PatchMapping("/{userId}")
     public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
         try {

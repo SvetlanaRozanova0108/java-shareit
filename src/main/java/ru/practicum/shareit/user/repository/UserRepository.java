@@ -16,7 +16,9 @@ public interface UserRepository {
 
     User deleteUser(Long userId);
 
-    Long getUserByEmail(String email);
+    Long getUserByEmail(String input);
 
     boolean checkForUser(Long id);
+
+    Boolean checkEmailExists(String input);
 }

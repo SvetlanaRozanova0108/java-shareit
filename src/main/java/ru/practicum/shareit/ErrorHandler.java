@@ -28,17 +28,5 @@ public class ErrorHandler {
     public ErrorResponse handleAlreadyExistException(final AlreadyExistsException e) {
         return new ErrorResponse(e.getMessage());
     }
-
-    private static class ErrorResponse {
-        private final String error;
-
-        public ErrorResponse(String error) {
-            this.error = error;
-        }
-
-        public String getError() {
-            return error;
-        }
-    }
 }
 

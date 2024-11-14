@@ -55,11 +55,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public void deleteOwner(Long ownerId) {
-        items.values()
+        var idsToRemove = items.values()
                 .stream()
                 .filter(item -> item.getOwnerId().equals(ownerId))
                 .map(Item::getId)
-                .forEach(id -> items.remove(id));
+                .collect(Collectors.toSet());
+
+        items.keySet().removeAll(idsToRemove);
     }
 }
 

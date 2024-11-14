@@ -18,20 +18,19 @@ import static java.util.stream.Collectors.toList;
 public class ItemServicelmpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
     private final UserService userService;
 
     @Override
     public List<ItemDto> getItemsByOwner(Long ownerId) {
         return itemRepository.getItemsByOwner(ownerId)
                 .stream()
-                .map(itemMapper::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(toList());
     }
 
     @Override
     public ItemDto getInfoAboutItemById(Long itemId) {
-        return itemMapper.toItemDto(itemRepository.getInfoAboutItemById(itemId));
+        return ItemMapper.toItemDto(itemRepository.getInfoAboutItemById(itemId));
     }
 
     @Override
@@ -42,7 +41,7 @@ public class ItemServicelmpl implements ItemService {
         text = text.toLowerCase();
         return itemRepository.searchForItemPotentialTenant(text)
                 .stream()
-                .map(itemMapper::toItemDto)
+                .map(ItemMapper::toItemDto)
                 .collect(toList());
     }
 
@@ -52,7 +51,7 @@ public class ItemServicelmpl implements ItemService {
         if (userService.getUserById(ownerId) == null) {
             throw new NotFoundException("userService.getUserById(ownerId) == null");
         }
-        input = itemMapper.toItemDto(itemRepository.createItem(itemMapper.toItem(itemDto, ownerId)));
+        input = ItemMapper.toItemDto(itemRepository.createItem(ItemMapper.toItem(itemDto, ownerId)));
         return input;
     }
 
@@ -77,7 +76,7 @@ public class ItemServicelmpl implements ItemService {
         if (!input.getOwnerId().equals(ownerId)) {
             throw new NotFoundException("Пользователь не владеет вещью.");
         }
-        return itemMapper.toItemDto(itemRepository.updateItem(itemMapper.toItem(itemDto, ownerId)));
+        return ItemMapper.toItemDto(itemRepository.updateItem(ItemMapper.toItem(itemDto, ownerId)));
     }
 
     public void deleteOwner(Long ownerId) {
