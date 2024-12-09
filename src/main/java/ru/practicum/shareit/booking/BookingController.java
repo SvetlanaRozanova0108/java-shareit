@@ -85,7 +85,7 @@ public class BookingController {
 
         try {
             log.info("Подтверждение или отклонение запроса на бронирование.");
-            return bookingService.responseBooking(userId, bookingId, approved);
+            return bookingService.responseBooking(bookingId, userId, approved);
 
         } catch (NotFoundException e) {
             throw new NotAvailableException(e.getMessage());
