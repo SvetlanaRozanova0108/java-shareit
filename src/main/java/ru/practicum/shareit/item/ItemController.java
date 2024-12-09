@@ -1,19 +1,18 @@
 package ru.practicum.shareit.item;
 
 import jakarta.validation.Valid;
-import jakarta.validation.ValidationException;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
+
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/items")
 public class ItemController {
 
@@ -21,10 +20,10 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDto> getItemsByOwner(@RequestHeader(headerUserId) Long ownerId) {
+    public List<ItemDto> getItemsByOwner(@RequestHeader(headerUserId) Long userId) {
         try {
             log.info("Просмотр владельцем списка всех вещей.");
-            return itemService.getItemsByOwner(ownerId);
+            return itemService.getItemsByOwner(userId);
         } catch (Exception e) {
             log.error("Ошибка просмотра владельцем списка всех вещей.");
             throw e;
@@ -32,10 +31,11 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getInfoAboutItemById(@PathVariable Long itemId) {
+    public ItemDto getInfoAboutItemById(@RequestHeader(headerUserId) Long userId,
+                                        @PathVariable Long itemId) {
         try {
             log.info("Просмотр информации о конкретной вещи по её идентификатору.");
-            return itemService.getInfoAboutItemById(itemId);
+            return itemService.getInfoAboutItemById(itemId, userId);
         } catch (Exception e) {
             log.error("Ошибка просмотра информации о конкретной вещи по её идентификатору.");
             throw e;
@@ -54,13 +54,14 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto, @RequestHeader(headerUserId) Long ownerId) {
+    public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
+                              @RequestHeader(headerUserId) Long userId) {
         try {
-            if (ownerId == null) {
-                throw new ValidationException("ownerId == null");
-            }
+//            if (userId == null) {
+//                throw new ValidationException("userId == null");
+//            }
             log.info("Добавление новой вещи владельцем.");
-            return itemService.createItem(itemDto, ownerId);
+            return itemService.createItem(userId, itemDto);
         } catch (Exception e) {
             log.error("Ошибка добавления новой вещи владельцем.");
             throw e;
@@ -68,12 +69,38 @@ public class ItemController {
     }
 
     @PatchMapping("/{itemId}")
-    public ItemDto updateItem(@RequestBody ItemDto itemDto, @PathVariable Long itemId, @RequestHeader(headerUserId) Long ownerId) {
+    public ItemDto updateItem(@RequestBody ItemDto itemDto,
+                              @PathVariable Long itemId,
+                              @RequestHeader(headerUserId) Long userId) {
         try {
             log.info("Изменение новой вещи владельцем.");
-            return itemService.updateItem(itemDto, ownerId, itemId);
+            return itemService.updateItem(itemDto, userId, itemId);
         } catch (Exception e) {
             log.error("Ошибка изменения новой вещи владельцем.");
+            throw e;
+        }
+    }
+
+    @DeleteMapping("/{itemId}")
+    public void deleteItem(@PathVariable Long itemId) {
+        try {
+            log.info("Удаление новой вещи владельцем.");
+            itemService.deleteItem(itemId);
+        } catch (Exception e) {
+            log.error("Ошибка удаления новой вещи владельцем.");
+            throw e;
+        }
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createComment(@Valid @RequestBody CommentDto commentDto,
+                                    @PathVariable Long itemId,
+                                    @RequestHeader(headerUserId) Long userId) {
+        try {
+            log.info("Добавление комментария.");
+            return itemService.createComment(commentDto, itemId, userId);
+        } catch (Exception e) {
+            log.error("Ошибка добавления комментария.");
             throw e;
         }
     }
