@@ -20,16 +20,6 @@ public class RequestServiceImpl implements RequestService {
     private final UserService userService;
     private final ItemRepository itemRepository;
 
-//    @Override
-//    public RequestDto getRequestById(Long userId, Long requestId) {
-//        Request request = requestRepository.findById(requestId)
-//                .orElseThrow(() -> new NotFoundException(String.format("Запрос с Id " + requestId + " не найден.")));
-//        request.setItems(itemRepository.findAll());
-//        RequestDto requestDto = RequestMapper.toRequestDto(request);
-//        requestDto.setRequestor(userService.getUserById(userId));
-//        return requestDto;
-//    }
-
     @Override
     @Transactional
     public RequestDto createRequest(Long userId, RequestDto requestDto) {

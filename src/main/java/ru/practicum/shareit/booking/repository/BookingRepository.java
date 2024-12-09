@@ -15,8 +15,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "     b.item.id = :itemId " +
             "     and b.booker.id = :bookerId" +
             "     and b.status= :status" +
-            "     and (b.end<:end)")
-    List<Booking> findByItemIdAndBookerIdAndStatusAndStartIsBefore(Long itemId, Long bookerId, BookingStatus status, LocalDateTime end);
+            "     and b.end<:end")
+    List<Booking> findByItemIdAndBookerIdAndStatusAndEndIsBefore(Long itemId, Long bookerId, BookingStatus status, LocalDateTime end);
 
     @Modifying
     @Query("Update Booking b "

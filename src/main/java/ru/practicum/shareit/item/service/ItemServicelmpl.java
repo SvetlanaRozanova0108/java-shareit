@@ -89,11 +89,8 @@ public class ItemServicelmpl implements ItemService {
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
-//        var request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(
-//                () -> new NotFoundException("Запрос с ID " + itemDto.getRequestId() + " не найден"));
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(user);
-//        item.setRequest(request);
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
 
@@ -134,13 +131,13 @@ public class ItemServicelmpl implements ItemService {
 
     @Override
     @Transactional
-    public CommentDto createComment(CommentDto commentDto, Long itemId, Long userId) {
-        Item item = itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException(String.format("Вещь с ID " + itemId + "не найдена.")));
+    public CommentDto createComment(Long userId, Long itemId, CommentDto commentDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID " + userId + "не найден.")));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException(String.format("Вещь с ID " + itemId + "не найдена.")));
         List<Booking> bookings = bookingRepository
-                .findByItemIdAndBookerIdAndStatusAndStartIsBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now().plusHours(3));
+                .findByItemIdAndBookerIdAndStatusAndEndIsBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now().plusHours(3));
         if (!bookings.isEmpty()) {
             Comment comment = CommentMapper.toComment(commentDto);
             comment.setItem(item);

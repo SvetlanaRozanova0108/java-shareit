@@ -57,9 +57,6 @@ public class ItemController {
     public ItemDto createItem(@Valid @RequestBody ItemDto itemDto,
                               @RequestHeader(headerUserId) Long userId) {
         try {
-//            if (userId == null) {
-//                throw new ValidationException("userId == null");
-//            }
             log.info("Добавление новой вещи владельцем.");
             return itemService.createItem(userId, itemDto);
         } catch (Exception e) {
@@ -93,12 +90,12 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto createComment(@Valid @RequestBody CommentDto commentDto,
+    public CommentDto createComment(@RequestHeader(headerUserId) Long userId,
                                     @PathVariable Long itemId,
-                                    @RequestHeader(headerUserId) Long userId) {
+                                    @Valid @RequestBody CommentDto commentDto) {
         try {
             log.info("Добавление комментария.");
-            return itemService.createComment(commentDto, itemId, userId);
+            return itemService.createComment(userId, itemId, commentDto);
         } catch (Exception e) {
             log.error("Ошибка добавления комментария.");
             throw e;

@@ -21,7 +21,7 @@ public interface ItemService {
 
     Long getOwnerId(Long itemId);
 
-    CommentDto createComment(CommentDto commentDto, Long itemId, Long userId);
+    CommentDto createComment(Long userId, Long itemId, CommentDto commentDto);
 
     ItemDto updateBooking(ItemDto itemDto);
 }

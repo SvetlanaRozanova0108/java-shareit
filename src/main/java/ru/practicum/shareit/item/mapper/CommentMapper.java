@@ -45,15 +45,4 @@ public class CommentMapper {
                 .map(CommentMapper::toComment)
                 .collect(Collectors.toList());
     }
-
-//    private static List<CommentDto> convertComments(List<Comment> comments) {
-//        if (comments == null) {
-//            return null;
-//        }
-//        List<CommentDto> result = new ArrayList<>();
-//        for (Comment comment : comments) {
-//            result.add(CommentMapper.toCommentDto(comment));
-//        }
-//        return result;
-//    }
 }

@@ -18,7 +18,7 @@ public class CommentDto {
     private Long id;
 
     @NotBlank
-    @Size(min = 1, max = 300, message = "Комментарий должен быть от 1 до 300 символов")
+    @Size(min = 1, max = 500)
     private String text;
     private String authorName;
     private LocalDateTime created;
