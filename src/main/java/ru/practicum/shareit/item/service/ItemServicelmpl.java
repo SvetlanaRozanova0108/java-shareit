@@ -137,7 +137,7 @@ public class ItemServicelmpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с ID " + itemId + "не найдена.")));
         List<Booking> bookings = bookingRepository
-                .findByItemIdAndBookerIdAndStatusAndEndIsBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now().plusHours(3).minusSeconds(3));
+                .findByItemIdAndBookerIdAndStatusAndEndIsBefore(itemId, userId, BookingStatus.APPROVED, LocalDateTime.now().plusHours(3).minusSeconds(2));
         if (!bookings.isEmpty()) {
             Comment comment = CommentMapper.toComment(commentDto);
             comment.setItem(item);
