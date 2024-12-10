@@ -18,7 +18,6 @@ public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository requestRepository;
     private final UserService userService;
-    private final ItemRepository itemRepository;
 
     @Override
     @Transactional
