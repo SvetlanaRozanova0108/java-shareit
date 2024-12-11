@@ -5,7 +5,6 @@ import lombok.*;
 import ru.practicum.shareit.booking.dto.BookingBookerDto;
 import java.util.List;
 
-@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

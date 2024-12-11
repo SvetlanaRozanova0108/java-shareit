@@ -1,5 +1,4 @@
 package ru.practicum.shareit.item;
-
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +7,7 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -45,6 +45,9 @@ public class ItemController {
     @GetMapping("/search")
     public List<ItemDto> searchForItemPotentialTenant(@RequestParam String text) {
         try {
+            if (text == null || text.isBlank()) {
+                return Collections.emptyList();
+            }
             log.info("Поиск вещи потенциальным арендатором.");
             return itemService.searchForItemPotentialTenant(text);
         } catch (Exception e) {

@@ -1,8 +1,7 @@
 package ru.practicum.shareit.item.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -18,8 +17,6 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.request.repository.RequestRepository;
-import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
@@ -28,38 +25,27 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @AllArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServicelmpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserService userService;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
-    private final RequestRepository requestRepository;
-    private final RequestService requestService;
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
     public List<ItemDto> getItemsByOwner(Long userId) {
         List<ItemDto> items = itemRepository.findAllByOwnerId(userId)
                 .stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
-        List<ItemDto> listAllItems = new ArrayList<>();
-        items.stream()
-                .map(this::updateBooking)
-                .forEach(i -> {
-                    CommentMapper.toListDto(commentRepository.findAllByItemId(i.getId()));
-                    listAllItems.add(i);
-                });
-        return listAllItems;
+        return items;
     }
 
     @Override
-    @Transactional
     public ItemDto getInfoAboutItemById(Long itemId, Long userId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с Id " + itemId + " не найдена.")));
@@ -73,11 +59,7 @@ public class ItemServicelmpl implements ItemService {
     }
 
     @Override
-    @Transactional
     public List<ItemDto> searchForItemPotentialTenant(String text) {
-        if (text == null || text.isBlank()) {
-            return Collections.emptyList();
-        }
         return itemRepository.searchItems(text)
                 .stream()
                 .map(ItemMapper::toItemDto)
@@ -123,14 +105,6 @@ public class ItemServicelmpl implements ItemService {
 
     @Override
     @Transactional
-    public Long getOwnerId(Long itemId) {
-        return itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException(String.format("Вещь с ID " + itemId + "не найдена.")))
-                .getOwner().getId();
-    }
-
-    @Override
-    @Transactional
     public CommentDto createComment(Long userId, Long itemId, CommentDto commentDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID " + userId + "не найден.")));
@@ -149,9 +123,8 @@ public class ItemServicelmpl implements ItemService {
         }
     }
 
-    @Override
     @Transactional
-    public ItemDto updateBooking(ItemDto itemDto) {
+    private ItemDto updateBooking(ItemDto itemDto) {
         LocalDateTime time = LocalDateTime.now();
         List<Booking> bookings = bookingRepository.getBookingItem(itemDto.getId());
         Booking lastBooking = bookings.stream()

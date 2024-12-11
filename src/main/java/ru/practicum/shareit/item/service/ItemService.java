@@ -19,9 +19,6 @@ public interface ItemService {
 
     void deleteItem(Long itemId);
 
-    Long getOwnerId(Long itemId);
-
     CommentDto createComment(Long userId, Long itemId, CommentDto commentDto);
 
-    ItemDto updateBooking(ItemDto itemDto);
 }

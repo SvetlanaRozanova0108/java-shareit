@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.service;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -18,7 +17,7 @@ import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.item.service.ItemService;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
@@ -29,16 +28,15 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class BookingServiceImpl implements BookingService {
+@Transactional(readOnly = true)
+class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final UserService userService;
-    private final ItemService itemService;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
     @Override
-    @Transactional
     public List<BookingDto> getListAllBookingsUser(Long userId, String state) {
         userService.getUserById(userId);
         LocalDateTime time = LocalDateTime.now();
@@ -66,7 +64,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
     public BookingDto getBookingInfo(Long userId, Long bookingId) {
         userService.getUserById(userId);
         Booking booking = bookingRepository.findById(bookingId)
@@ -79,7 +76,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
     public List<BookingDto> getListBookingsAllItems(Long ownerId, String state) {
         userService.getUserById(ownerId);
         LocalDateTime time = LocalDateTime.now();
@@ -152,10 +148,10 @@ public class BookingServiceImpl implements BookingService {
         }
         if (approve) {
             booking.setStatus(BookingStatus.APPROVED);
-            bookingRepository.save(BookingStatus.APPROVED, bookingId);
+            bookingRepository.update(BookingStatus.APPROVED, bookingId);
         } else {
             booking.setStatus(BookingStatus.REJECTED);
-            bookingRepository.save(BookingStatus.REJECTED, bookingId);
+            bookingRepository.update(BookingStatus.REJECTED, bookingId);
         }
         return BookingMapper.toBookingDto(booking);
     }

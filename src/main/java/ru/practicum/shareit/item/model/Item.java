@@ -9,22 +9,24 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 @Builder
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(of = {"name", "description", "owner_id"})
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "items")
-@EqualsAndHashCode(of = "id")
+
 public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 500)
     private String description;
 
     @Column(name = "is_available")
@@ -39,11 +41,14 @@ public class Item {
     private Request request;
 
     @Transient
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Comment> comments;
 
+    @OneToMany(fetch = FetchType.LAZY)
     @Transient
     private Booking lastBooking;
 
+    @OneToMany(fetch = FetchType.LAZY)
     @Transient
     private Booking nextBooking;
 

@@ -8,10 +8,9 @@ import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.service.RequestService;
 
 @Slf4j
-
-@AllArgsConstructor
 @RestController
-@RequestMapping(path = "/requests")
+@AllArgsConstructor
+@RequestMapping("/requests")
 public class RequestController {
 
     private final String headerUserId = "X-Sharer-User-Id";

@@ -3,27 +3,23 @@ package ru.practicum.shareit.booking;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
 @Slf4j
 @RestController
-@Validated
 @AllArgsConstructor
 @RequestMapping("/bookings")
 public class BookingController {
 
     private final String headerUserId = "X-Sharer-User-Id";
     private final BookingService bookingService;
-    private final ItemService itemService;
 
     @GetMapping()
     public List<BookingDto> getListAllBookingsUser(@RequestHeader(headerUserId) Long userId,

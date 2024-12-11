@@ -1,7 +1,5 @@
 package ru.practicum.shareit.request.mapper;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.model.Request;
@@ -10,8 +8,6 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-@Component
-@AllArgsConstructor
 public class RequestMapper {
 
     public static RequestDto toRequestDto(Request request) {

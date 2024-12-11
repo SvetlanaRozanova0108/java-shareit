@@ -1,21 +1,19 @@
 package ru.practicum.shareit.request.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder(toBuilder = true)
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
 @Entity
+@AllArgsConstructor
 @Table(name = "requests")
 public class Request {
 
@@ -23,7 +21,7 @@ public class Request {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 500)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

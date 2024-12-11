@@ -22,7 +22,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("Update Booking b "
             + "set b.status = :status  "
             + "where b.id = :bookingId")
-    void save(BookingStatus status, Long bookingId);
+    void update(BookingStatus status, Long bookingId);
 
     //StateAllUser
     @Query("SELECT b FROM Booking b "

@@ -2,11 +2,13 @@ package ru.practicum.shareit.user.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Builder(toBuilder = true)
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(of = {"name", "email"})
 @Entity
+@AllArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -14,9 +16,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 50)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", length = 150)
     private String email;
 }
