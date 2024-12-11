@@ -9,6 +9,7 @@ import lombok.*;
 @EqualsAndHashCode(of = {"name", "email"})
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 public class User {
 
@@ -21,4 +22,6 @@ public class User {
 
     @Column(name = "email", length = 150)
     private String email;
+
+
 }

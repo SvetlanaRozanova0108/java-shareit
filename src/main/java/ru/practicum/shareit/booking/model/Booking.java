@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "bookings")
 public class Booking {
 

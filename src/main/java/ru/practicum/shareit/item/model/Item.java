@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 @EqualsAndHashCode(of = {"name", "description"})
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "items")
 

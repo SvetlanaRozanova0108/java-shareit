@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @ToString
 @Entity
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "requests")
 public class Request {
@@ -35,5 +36,9 @@ public class Request {
     private List<Item> items;
 
     public Request(Long id, String description, User user, LocalDateTime created) {
+        this.id = id;
+        this.description = description;
+        this.requestor = user;
+        this.created = created;
     }
 }
