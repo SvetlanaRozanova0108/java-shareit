@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(of = {"name", "description", "owner_id"})
+@EqualsAndHashCode(of = {"name", "description"})
 @AllArgsConstructor
 @Entity
 @Table(name = "items")
