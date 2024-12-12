@@ -123,7 +123,6 @@ public class ItemServicelmpl implements ItemService {
         }
     }
 
-    @Transactional
     private ItemDto updateBooking(ItemDto itemDto) {
         LocalDateTime time = LocalDateTime.now();
         List<Booking> bookings = bookingRepository.getBookingItem(itemDto.getId());
