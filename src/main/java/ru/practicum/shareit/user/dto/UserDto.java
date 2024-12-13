@@ -2,9 +2,9 @@ package ru.practicum.shareit.user.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
-@Builder(toBuilder = true)
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
 
     private Long id;

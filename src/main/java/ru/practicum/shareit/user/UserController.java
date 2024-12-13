@@ -1,10 +1,9 @@
 package ru.practicum.shareit.user;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -12,12 +11,11 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-    private final ItemService itemService;
 
     @GetMapping
     public List<UserDto> getAllUsers() {
@@ -53,7 +51,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@RequestBody UserDto userDto, @PathVariable Long userId) {
+    public UserDto updateUser(@RequestBody UserDto userDto,
+                              @PathVariable Long userId) {
         try {
             log.info("Обновление пользователя.");
             return userService.updateUser(userDto, userId);
@@ -64,12 +63,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public UserDto deleteUser(@PathVariable Long userId) {
+    public void deleteUser(@PathVariable Long userId) {
         try {
             log.info("Удаление пользователя.");
-            UserDto userDto = userService.deleteUser(userId);
-            itemService.deleteOwner(userId);
-            return userDto;
+            userService.deleteUser(userId);
         } catch (Exception e) {
             log.error("Ошибка удаления пользователя.");
             throw e;
