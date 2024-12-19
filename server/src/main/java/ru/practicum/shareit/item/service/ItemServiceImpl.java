@@ -18,6 +18,7 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.mapper.RequestMapper;
+import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-public class ItemServicelmpl implements ItemService {
+public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserService userService;
@@ -38,6 +39,7 @@ public class ItemServicelmpl implements ItemService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final RequestService requestService;
+    private final RequestRepository requestRepository;
 
     @Override
     public List<ItemDto> getItemsByOwner(Long userId) {
@@ -86,7 +88,8 @@ public class ItemServicelmpl implements ItemService {
     public ItemDto updateItem(ItemDto itemDto, Long userId, Long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с Id " + itemId + " не найдена.")));
-        userService.getUserById(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
         if (!item.getOwner().getId().equals(userId)) {
             throw new NotFoundException(String.format("Пользователь с Id " + userId + " не владелец."));
         }
@@ -98,6 +101,11 @@ public class ItemServicelmpl implements ItemService {
         }
         if (itemDto.getAvailable() != null) {
             item.setAvailable(itemDto.getAvailable());
+        }
+        if (itemDto.getRequestId() != null) {
+            var request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(
+                    () -> new NotFoundException("Запрос с ID " + itemDto.getRequestId() + " не найден"));
+            item.setRequest(request);
         }
         return ItemMapper.toItemDto(itemRepository.save(item));
     }
@@ -147,5 +155,12 @@ public class ItemServicelmpl implements ItemService {
         }
         return itemDto;
     }
+
+//    @Override
+//    public Long getOwnerId(Long itemId) {
+//        return itemRepository.findById(itemId)
+//                .orElseThrow(() -> new NotFoundException(String.format("Вещь с ID " + itemId + "не найдена.")))
+//                .getOwner().getId();
+//    }
 }
 

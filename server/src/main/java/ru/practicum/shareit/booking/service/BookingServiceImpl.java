@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -17,7 +18,6 @@ import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
@@ -29,7 +29,7 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-class BookingServiceImpl implements BookingService {
+public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final UserService userService;
@@ -60,7 +60,7 @@ class BookingServiceImpl implements BookingService {
                 return BookingMapper.toBookingDto(bookingRepository
                         .findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED));
         }
-        throw new NotFoundException(String.format("Состояние не найдено.", state));
+        throw new NotFoundException(String.format("Состояние " + state + " не найдено."));
     }
 
     @Override
@@ -95,7 +95,7 @@ class BookingServiceImpl implements BookingService {
                 return BookingMapper.toBookingDto(bookingRepository
                         .findAllByItemIdInAndStatusOrderByStartDesc(ownerId, time, BookingStatus.REJECTED));
         }
-        throw new NotFoundException(String.format("Состояние не найдено.", state));
+        throw new NotFoundException(String.format("Состояние " + state + " не найдено."));
     }
 
     @SneakyThrows
@@ -104,13 +104,11 @@ class BookingServiceImpl implements BookingService {
     public BookingDto createBooking(Long userId, BookingItemDto bookingItemDto) {
         if (bookingItemDto.getEnd().isBefore(bookingItemDto.getStart()) ||
                 bookingItemDto.getEnd().equals(bookingItemDto.getStart())) {
-            throw new DataTimeException(String
-                    .format("Неверное время бронирования.",
-                            bookingItemDto.getStart(), bookingItemDto.getEnd()));
+            throw new DataTimeException("Неверное время бронирования. " + bookingItemDto.getStart() + " - " + bookingItemDto.getEnd());
         }
-        if (bookingItemDto.getStart().isBefore(LocalDateTime.now())) {
-            throw new ValidationException("Неверное время бронирования.");
-        }
+//        if (bookingItemDto.getStart().isBefore(LocalDateTime.now())) {
+//            throw new ValidationException(String.format("Неверное время бронирования. %s %s", bookingItemDto.getStart(), bookingItemDto.getEnd()));
+//        }
         Item item = itemRepository.findById(bookingItemDto.getItemId())
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с Id " + bookingItemDto.getItemId() + " не найдена.")));
         if (item.getOwner().getId().equals(userId)) {

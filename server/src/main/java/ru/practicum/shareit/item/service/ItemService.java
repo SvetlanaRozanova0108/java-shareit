@@ -21,4 +21,5 @@ public interface ItemService {
 
     CommentDto createComment(Long userId, Long itemId, CommentDto commentDto);
 
+//    Long getOwnerId(Long itemId);
 }

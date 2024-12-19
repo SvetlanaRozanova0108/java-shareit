@@ -16,7 +16,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 @AllArgsConstructor
 @Transactional(readOnly = true)
-class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
