@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import jakarta.validation.ValidationException;
-import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
