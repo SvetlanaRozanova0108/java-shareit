@@ -27,7 +27,7 @@ public class ItemRepositoryTests {
 
     @Test
     void findAllByOwnerId() {
-        var userId =10L;
+        var userId = 10L;
         var items = itemRepository.findAllByOwnerId(userId);
 
         TypedQuery<Item> query =

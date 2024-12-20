@@ -38,7 +38,7 @@ public class RequestRepositoryTests {
         TypedQuery<Request> query =
                 entityManager.createQuery(" select i from Request i " +
                         "where i.requestor.id =:id " +
-                        "order by created " , Request.class);
+                        "order by created ", Request.class);
         var sut = query.setParameter("id", userId).getResultList();
 
         assertEquals(requests.size(), sut.size());
@@ -51,7 +51,7 @@ public class RequestRepositoryTests {
         TypedQuery<Request> query =
                 entityManager.createQuery(" select i from Request i " +
                         "where i.requestor.id !=:id " +
-                        "order by created " , Request.class);
+                        "order by created ", Request.class);
         var sut = query.setParameter("id", userId).getResultList();
 
         assertEquals(requests.size(), sut.size());
