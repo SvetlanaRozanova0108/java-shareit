@@ -37,7 +37,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(MockitoExtension.class)
-class ItemServiceTest {
+class ItemServiceTests {
 
     @InjectMocks
     private ItemServiceImpl itemService;

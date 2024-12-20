@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = RequestController.class)
-class RequestControllerTest {
+class RequestControllerTests {
 
     @Autowired
     private ObjectMapper mapper;

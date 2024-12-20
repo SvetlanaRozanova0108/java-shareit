@@ -24,7 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 
 @ExtendWith(MockitoExtension.class)
-class RequestServiceTest {
+class RequestServiceTests {
 
     @InjectMocks
     private RequestServiceImpl requestService;

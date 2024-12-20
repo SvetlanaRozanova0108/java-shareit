@@ -42,7 +42,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
-class BookingServiceTest {
+class BookingServiceTests {
 
     @InjectMocks
     private BookingServiceImpl bookingService;
