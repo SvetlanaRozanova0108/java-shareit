@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.request.controller.RequestController;
 import ru.practicum.shareit.request.dto.RequestDto;
 import ru.practicum.shareit.request.service.RequestService;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,6 +65,15 @@ class RequestControllerTests {
     }
 
     @Test
+    void getListYourRequestsTest1() throws Exception {
+
+        doThrow(new ValidationException("")).when(requestService).getListYourRequests(anyLong());
+        mvc.perform(get("/requests")
+                        .header(headerUserId, 1L))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void getListAllRequestsTest() throws Exception {
         Mockito.when(requestService.getListAllRequests(anyLong()))
                 .thenReturn(List.of(requestDto));
@@ -76,6 +87,16 @@ class RequestControllerTests {
     }
 
     @Test
+    void getListAllRequestsTest1() throws Exception {
+
+        doThrow(new ValidationException("")).when(requestService).getListAllRequests(anyLong());
+
+        mvc.perform(get("/requests/all")
+                        .header(headerUserId, 1L))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void getRequestByIdTest() throws Exception {
         Mockito.when(requestService.getRequestById(anyLong(), anyLong()))
                 .thenReturn(requestDto);
@@ -86,6 +107,16 @@ class RequestControllerTests {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
+    }
+
+    @Test
+    void getRequestByIdTest1() throws Exception {
+
+        doThrow(new ValidationException("")).when(requestService).getRequestById(anyLong(), anyLong());
+
+        mvc.perform(get("/requests/{requestId}", 1L)
+                        .header(headerUserId, 1L))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -103,5 +134,16 @@ class RequestControllerTests {
                 .getContentAsString();
 
         verify(requestService).createRequest(1L, requestDto);
+    }
+
+    @Test
+    void createRequestTest1() throws Exception {
+
+        doThrow(new ValidationException("")).when(requestService).createRequest(anyLong(), any());
+        mvc.perform(post("/requests")
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest());
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -14,19 +15,12 @@ import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,6 +70,14 @@ class ItemControllerTests {
     }
 
     @Test
+    void getItemsByOwnerTest1() throws Exception {
+        doThrow(new ValidationException("")).when(itemService).getItemsByOwner(anyLong());
+        mvc.perform(get("/items")
+                        .header(headerUserId, 1L))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void getInfoAboutItemByIdTest() throws Exception {
 
         mvc.perform(get("/items/{id}", 1L)
@@ -85,6 +87,19 @@ class ItemControllerTests {
                 .andExpect(status().isOk());
 
         verify(itemService).getInfoAboutItemById(1L, 1L);
+    }
+
+    @Test
+    void getInfoAboutItemByIdTest1() throws Exception {
+
+        doThrow(new ValidationException("")).when(itemService).getInfoAboutItemById(1L, 1L);
+
+        mvc.perform(get("/items/{id}", 1L)
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(itemDto)))
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -100,6 +115,22 @@ class ItemControllerTests {
     }
 
     @Test
+    void searchForItemPotentialTenantTest1() throws Exception {
+
+        mvc.perform(get("/items/search?text="))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void searchForItemPotentialTenantTest2() throws Exception {
+        doThrow(new ValidationException("")).when(itemService).searchForItemPotentialTenant(anyString());
+
+        mvc.perform(get("/items/search?text=description"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void createItemTest() throws Exception {
         mvc.perform(post("/items")
                         .header(headerUserId, 1L)
@@ -108,6 +139,18 @@ class ItemControllerTests {
                 .andExpect(status().isOk());
 
         verify(itemService).createItem(1L, itemDto);
+    }
+
+    @Test
+    void createItemTest1() throws Exception {
+        doThrow(new ValidationException("")).when(itemService).createItem(1L, itemDto);
+
+        mvc.perform(post("/items")
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(itemDto)))
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -130,11 +173,39 @@ class ItemControllerTests {
     }
 
     @Test
+    void updateItemTest1() throws Exception {
+        ItemDto updateItemDto = ItemDto.builder()
+                .id(1L)
+                .name("updateItem")
+                .description("Description")
+                .available(true)
+                .requestId(1L)
+                .build();
+
+        doThrow(new ValidationException("")).when(itemService).updateItem(updateItemDto, 1L, 1L);
+
+        mvc.perform(patch("/items/{id}", 1L)
+                        .header(headerUserId, 1L)
+                        .content(mapper.writeValueAsString(updateItemDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void deleteItemTest() throws Exception {
         mvc.perform(delete("/items/{itemId}", 1L))
                 .andExpect(status().isOk());
 
         verify(itemService).deleteItem(1L);
+    }
+
+    @Test
+    void deleteItemTest1() throws Exception {
+        doThrow(new ValidationException("")).when(itemService).deleteItem(1L);
+
+        mvc.perform(delete("/items/{itemId}", 1L))
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -150,5 +221,17 @@ class ItemControllerTests {
                 .andExpect(jsonPath("$.id", is(commentDto.getId()), Long.class))
                 .andExpect(jsonPath("$.text", is(commentDto.getText())))
                 .andExpect(jsonPath("$.authorName", is(commentDto.getAuthorName())));
+    }
+
+    @Test
+    void createCommentTest1() throws Exception {
+
+        doThrow(new ValidationException("")).when(itemService).createComment(anyLong(), anyLong(), any());
+
+        mvc.perform(post("/items/1/comment")
+                        .header(headerUserId, 1L)
+                        .content(mapper.writeValueAsString(commentDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

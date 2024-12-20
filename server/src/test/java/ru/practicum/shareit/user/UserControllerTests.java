@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.practicum.shareit.exception.AlreadyExistsException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.controller.UserController;
@@ -101,12 +102,12 @@ class UserControllerTests {
     @Test
     void createUserThrowBadRequestTest() throws Exception {
 
-        doThrow(new ValidationException("")).when(userService).createUser(any());
+        doThrow(new AlreadyExistsException("")).when(userService).createUser(any());
 
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userDto)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isConflict());
 
         verify(userService).createUser(userDto);
     }

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.xml.bind.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import ru.practicum.shareit.booking.controller.BookingController;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.exception.AlreadyExistsException;
+import ru.practicum.shareit.exception.DataTimeException;
+import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.time.LocalDateTime;
@@ -19,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,6 +73,17 @@ class BookingControllerTests {
     }
 
     @Test
+    void getListAllBookingsUserTest1() throws Exception {
+
+        doThrow(new NotAvailableException("")).when(bookingService).getListAllBookingsUser(anyLong(), anyString());
+
+        mvc.perform(get("/bookings?state=ALL")
+                        .header(headerUserId, 1L))
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
     void getBookingInfoTest() throws Exception {
         Mockito.when(bookingService.getBookingInfo(anyLong(), anyLong()))
                 .thenReturn(bookingDto);
@@ -85,6 +101,19 @@ class BookingControllerTests {
     }
 
     @Test
+    void getBookingInfoTest1() throws Exception {
+        doThrow(new NotAvailableException("")).when(bookingService).getBookingInfo(anyLong(), anyLong());
+
+        mvc.perform(get("/bookings/{bookingId}", 1L)
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(bookingItemDto)))
+                .andExpect(status().isBadRequest());
+
+
+    }
+
+    @Test
     void getListBookingsAllItemsTest() throws Exception {
         Mockito.when(bookingService.getListBookingsAllItems(anyLong(), any()))
                 .thenReturn(List.of(bookingDto));
@@ -98,6 +127,18 @@ class BookingControllerTests {
                 .getContentAsString();
 
         assertEquals(result, mapper.writeValueAsString(List.of(bookingDto)));
+    }
+
+    @Test
+    void getListBookingsAllItemsTest1() throws Exception {
+
+        doThrow(new NotAvailableException("")).when(bookingService).getListBookingsAllItems(anyLong(), any());
+
+        mvc.perform(get("/bookings/owner?state=ALL")
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test
@@ -126,5 +167,26 @@ class BookingControllerTests {
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void responseBookingTest1() throws Exception {
+        doThrow(new AlreadyExistsException("")).when(bookingService).responseBooking(anyLong(), anyLong(), anyBoolean());
+
+        mvc.perform(patch("/bookings/1?approved=true")
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+    }
+
+    @Test
+    void responseBookingTest2() throws Exception {
+
+        doThrow(new NotAvailableException("")).when(bookingService).responseBooking(anyLong(), anyLong(), anyBoolean());
+
+        mvc.perform(patch("/bookings/1?approved=true")
+                        .header(headerUserId, 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

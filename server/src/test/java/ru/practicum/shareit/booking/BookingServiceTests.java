@@ -175,6 +175,25 @@ class BookingServiceTests {
     }
 
     @Test
+    void createBookingAvailableTest() {
+        item1.setAvailable(true);
+        Mockito.when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(user1));
+
+        Mockito.when(itemRepository.findById(anyLong()))
+                .thenReturn(Optional.of(item1));
+        Mockito.when(bookingRepository.save(any())).thenReturn(booking);
+
+        bookingService.createBooking(2L, bookingItemDto);
+//        Mockito.when(itemService.getOwnerId(anyLong()))
+//                .thenReturn(1L);
+//        Exception e = assertThrows(NotAvailableException.class,
+//                () ->
+//        assertEquals(e.getMessage(), String.format("Вещь с Id " + 1L + " недоступна."));
+        Mockito.verify(bookingRepository).save(any());
+    }
+
+    @Test
     void responseBookingAlreadyExistsExceptionTest() {
         Mockito.when(bookingRepository.findById(anyLong()))
                 .thenReturn(Optional.of(booking));
