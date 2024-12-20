@@ -34,7 +34,7 @@ public class ItemMapper {
                 itemDto.getId(),
                 itemDto.getName(),
                 itemDto.getDescription(),
-                itemDto.getAvailable(),
-                itemDto.getRequestId() != null ? itemDto.getRequestId() : null);
+                itemDto.getAvailable()
+                /*,itemDto.getRequestId() != null ? itemDto.getRequestId() : null*/);
     }
 }

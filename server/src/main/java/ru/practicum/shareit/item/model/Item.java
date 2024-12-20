@@ -52,11 +52,10 @@ public class Item {
     @Transient
     private Booking nextBooking;
 
-    public Item(Long id, String name, String description, Boolean available, Long aLong) {
+    public Item(Long id, String name, String description, Boolean available) {
         this.setId(id);
         this.setName(name);
         this.setDescription(description);
         this.setAvailable(available);
-        this.setRequest(request);
     }
 }
