@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.xml.bind.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.exception.AlreadyExistsException;
-import ru.practicum.shareit.exception.DataTimeException;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
