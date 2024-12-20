@@ -41,7 +41,7 @@ public class RequestRepositoryTests {
                         "order by created " , Request.class);
         var sut = query.setParameter("id", userId).getResultList();
 
-        assertEquals(requests.size(), sut.size() );
+        assertEquals(requests.size(), sut.size());
     }
 
     @Test
@@ -54,7 +54,7 @@ public class RequestRepositoryTests {
                         "order by created " , Request.class);
         var sut = query.setParameter("id", userId).getResultList();
 
-        assertEquals(requests.size(), sut.size() );
+        assertEquals(requests.size(), sut.size());
     }
 
     @Test

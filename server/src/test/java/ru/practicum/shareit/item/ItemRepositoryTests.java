@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ItemRepositoryTests {
 
     private final EntityManager entityManager;
-    //private static Session session;
     private final ItemRepository itemRepository;
     private final User user1 = new User(20L, "User1", "user1@email.com");
     private final Item item = new Item(1L, "item", "description", true, user1, null, null, null, null);
@@ -30,11 +29,12 @@ public class ItemRepositoryTests {
     void findAllByOwnerId() {
         var userId =10L;
         var items = itemRepository.findAllByOwnerId(userId);
+
         TypedQuery<Item> query =
                 entityManager.createQuery("FROM Item WHERE owner.id = :id", Item.class);
         var sut = query.setParameter("id", userId).getResultList();
 
-        assertEquals(items.size(), sut.size() );
+        assertEquals(items.size(), sut.size());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class ItemRepositoryTests {
                         " or upper(i.description) like upper(concat('%', :text, '%'))", Item.class);
         var sut = query.setParameter("text", text).getResultList();
 
-        assertEquals(items.size(), sut.size() );
+        assertEquals(items.size(), sut.size());
     }
 
     @Test
