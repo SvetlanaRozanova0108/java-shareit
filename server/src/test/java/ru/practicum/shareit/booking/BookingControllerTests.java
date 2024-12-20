@@ -20,8 +20,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = BookingController.class)
@@ -123,12 +122,9 @@ class BookingControllerTests {
         Mockito.when(bookingService.responseBooking(anyLong(), anyLong(), anyBoolean()))
                 .thenReturn(bookingDto);
 
-        mvc.perform(get("/bookings/1?approved=true")
+        mvc.perform(patch("/bookings/1?approved=true")
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(status().isOk());
     }
 }
