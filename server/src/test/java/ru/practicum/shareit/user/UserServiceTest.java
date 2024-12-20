@@ -23,6 +23,7 @@ class UserServiceTest {
     @InjectMocks
     private UserServiceImpl userService;
 
+
     @Mock
     private UserRepository userRepository;
     private final User user1 = new User(1L, "User1", "user1@email.com");
@@ -72,9 +73,36 @@ class UserServiceTest {
     }
 
     @Test
+    void updateUserTest2() {
+        Mockito.when(userRepository.findById(1L))
+                .thenReturn(Optional.of(user1));
+
+        User updateUser = new User(1L, null, "updateUser@email.ru");
+        UserDto updateUserDto = new UserDto(1L, null, "updateUser@email.ru");
+        Mockito.when(userRepository.save(any()))
+                .thenReturn(updateUser);
+
+        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserDto);
+    }
+
+    @Test
+    void updateUserTest3() {
+        Mockito.when(userRepository.findById(1L))
+                .thenReturn(Optional.of(user1));
+
+        User updateUser = new User(1L, "updateUser", null);
+        UserDto updateUserDto = new UserDto(1L, "updateUser", null);
+        Mockito.when(userRepository.save(any()))
+                .thenReturn(updateUser);
+
+        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserDto);
+    }
+
+    @Test
     void deleteUserTest() {
         userService.deleteUser(1L);
 
         Mockito.verify(userRepository).deleteById(1L);
     }
+
 }
