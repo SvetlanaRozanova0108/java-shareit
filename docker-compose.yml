@@ -10,7 +10,7 @@ services:
       - server
     environment:
       - SHAREIT_SERVER_URL=http://shareit-server:9090
-      - server_port=8080
+      #- server_port=8080
 
   server:
     build: server
@@ -22,7 +22,7 @@ services:
       - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/shareit
-      - server_port=9090
+      #- server_port=9090
       - SPRING_DATASOURCE_USERNAME=shareit
       - SPRING_DATASOURCE_PASSWORD=shareit
 
