@@ -51,9 +51,6 @@ class BookingServiceTests {
     private UserService userService;
 
     @Mock
-    private ItemService itemService;
-
-    @Mock
     private BookingRepository bookingRepository;
 
     @Mock
@@ -99,42 +96,51 @@ class BookingServiceTests {
 
     @Test
     void getBookingInfoIsEmptyTest() {
+
         Mockito.when(bookingRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
         Exception e = assertThrows(NotFoundException.class,
                 () -> bookingService.getBookingInfo(1L, 1L));
+
         assertEquals(e.getMessage(), String.format("Бронирование с Id " + 1L + " не найдено."));
     }
 
     @Test
     void getBookingInfoNotFoundExceptionTest() {
+
         Mockito.when(bookingRepository.findById(1L))
                 .thenReturn(Optional.of(booking));
         Exception e = assertThrows(NotFoundException.class,
                 () -> bookingService.getBookingInfo(1L, 11L));
+
         assertEquals(e.getMessage(), String.format("Бронирование с Id " + 11L + " не найдено."));
     }
 
     @Test
     void getListAllBookingsUserNotFoundExceptionTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Exception e = assertThrows(NotFoundException.class,
                 () -> bookingService.getListAllBookingsUser(1L, "UnknownState"));
+
         assertEquals(e.getMessage(), "Состояние UnknownState не найдено.");
     }
 
     @Test
     void getListBookingsAllItemsNotFoundExceptionTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Exception e = assertThrows(NotFoundException.class,
                 () -> bookingService.getListBookingsAllItems(1L, "UnknownState"));
+
         assertEquals(e.getMessage(), "Состояние UnknownState не найдено.");
     }
 
     @Test
     void createBookingTimeDataExceptionTest() {
+
         BookingItemDto bookingItemDto = BookingItemDto.builder()
                 .start(LocalDateTime.now().plusHours(1L))
                 .end(LocalDateTime.now().minusHours(1L))
@@ -142,12 +148,14 @@ class BookingServiceTests {
                 .build();
         Exception e = assertThrows(DataTimeException.class,
                 () -> bookingService.createBooking(1L, bookingItemDto));
+
         assertEquals(e.getMessage(), String.format("Неверное время бронирования. " + bookingItemDto.getStart() + " - " + bookingItemDto.getEnd(),
                 bookingItemDto.getStart(), bookingItemDto.getEnd()));
     }
 
     @Test
     void createBookingValidationExceptionTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
 
@@ -155,11 +163,13 @@ class BookingServiceTests {
                .thenReturn(Optional.of(item1));
         Exception e = assertThrows(ValidationException.class,
                 () -> bookingService.createBooking(1L, bookingItemDto));
+
         assertEquals(e.getMessage(), "Владелец не может быть заказчиком вещи.");
     }
 
     @Test
     void createBookingNotAvailableExceptionTest() {
+
         item1.setAvailable(false);
         Mockito.when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(user1));
@@ -167,15 +177,15 @@ class BookingServiceTests {
         Mockito.when(itemRepository.findById(anyLong()))
                 .thenReturn(Optional.of(item1));
 
-//        Mockito.when(itemService.getOwnerId(anyLong()))
-//                .thenReturn(1L);
         Exception e = assertThrows(NotAvailableException.class,
                 () -> bookingService.createBooking(2L, bookingItemDto));
+
         assertEquals(e.getMessage(), String.format("Вещь с Id " + 1L + " недоступна."));
     }
 
     @Test
     void createBookingAvailableTest() {
+
         item1.setAvailable(true);
         Mockito.when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(user1));
@@ -185,22 +195,19 @@ class BookingServiceTests {
         Mockito.when(bookingRepository.save(any())).thenReturn(booking);
 
         bookingService.createBooking(2L, bookingItemDto);
-//        Mockito.when(itemService.getOwnerId(anyLong()))
-//                .thenReturn(1L);
-//        Exception e = assertThrows(NotAvailableException.class,
-//                () ->
-//        assertEquals(e.getMessage(), String.format("Вещь с Id " + 1L + " недоступна."));
+
         Mockito.verify(bookingRepository).save(any());
     }
 
     @Test
     void responseBookingAlreadyExistsExceptionTest() {
+
         Mockito.when(bookingRepository.findById(anyLong()))
                 .thenReturn(Optional.of(booking));
-//        Mockito.when(itemService.getOwnerId(anyLong()))
-//                .thenReturn(1L);
+
         Exception e = assertThrows(AlreadyExistsException.class,
                 () -> bookingService.responseBooking(1L, 1L, true));
+
         assertEquals(e.getMessage(), "Вещь уже забронирована.");
     }
 
@@ -249,6 +256,7 @@ class BookingServiceTests {
             "PAST, -2, -1",
             "FUTURE, 1, 2",
     })
+
     void getListBookingsAllItemsTest(String state, int toStart, int toEnd) {
         LocalDateTime start = LocalDateTime.now().plusDays(toStart);
         LocalDateTime end = LocalDateTime.now().plusDays(toEnd);

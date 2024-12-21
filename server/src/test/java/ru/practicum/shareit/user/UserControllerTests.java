@@ -161,7 +161,8 @@ class UserControllerTests {
     }
 
     @Test
-    void deleteUserTestThrowNotFound() throws Exception {
+    void deleteUserNotFoundExceptionTest() throws Exception {
+
         var userId = 100L;
         doThrow(new NotFoundException("")).when(userService).deleteUser(anyLong());
 

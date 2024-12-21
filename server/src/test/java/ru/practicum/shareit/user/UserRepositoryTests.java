@@ -21,20 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class UserRepositoryTests {
 
     private final EntityManager entityManager;
-    //private static Session session;
     private final UserRepository userRepository;
     private final User user1 = new User(1L, "User1", "user1@email.com");
-
-//    @BeforeAll
-//    static void init() {
-//        session = HibernateUtil.getSessionFactory().openSession();
-//        session.beginTransaction();
-//    }
-//
-//    @AfterAll
-//    static void clear() {
-//        session.close();
-//    }
 
     @Test
     void findAll() {
@@ -46,6 +34,7 @@ public class UserRepositoryTests {
 
     @Test
     void findById() {
+
         var sut = userRepository.findById(10L);
 
         assertNotNull(sut);
@@ -53,6 +42,7 @@ public class UserRepositoryTests {
 
     @Test
     void save() {
+
         userRepository.save(user1);
 
         TypedQuery<User> query =
@@ -64,6 +54,7 @@ public class UserRepositoryTests {
 
     @Test
     void deleteById() {
+
         var userId = 10L;
 
         userRepository.deleteById(userId);
@@ -71,6 +62,7 @@ public class UserRepositoryTests {
         TypedQuery<User> query =
                 entityManager.createQuery("FROM User WHERE id = :id", User.class);
         var sut = query.setParameter("id", userId).getResultList();
+
         assertThat(sut).isEmpty();
     }
 }

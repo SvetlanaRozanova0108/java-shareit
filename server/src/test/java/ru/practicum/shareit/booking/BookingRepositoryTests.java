@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class BookingRepositoryTests {
 
     private final EntityManager entityManager;
-    private final ObjectMapper objectMapper;
     private final BookingRepository bookingRepository;
 
     @Test
@@ -53,11 +52,10 @@ public class BookingRepositoryTests {
     }
 
     @Test
-    void update() {
+    void updateBooking() {
 
         var bookingId = 20L;
         var status = BookingStatus.CANCELED;
-
         bookingRepository.update(status, bookingId);
 
         TypedQuery<Booking> query =
@@ -65,7 +63,6 @@ public class BookingRepositoryTests {
         Booking sut = query.setParameter("id", bookingId).getSingleResult();
 
         assertEquals(status, sut.getStatus());
-
     }
 
     @Test

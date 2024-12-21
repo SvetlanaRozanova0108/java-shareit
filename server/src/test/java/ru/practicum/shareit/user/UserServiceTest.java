@@ -33,6 +33,7 @@ class UserServiceTest {
 
     @Test
     void getAllUsersTest() {
+
         Mockito.when(userRepository.findAll())
                 .thenReturn(List.of(user1, user2));
 
@@ -43,6 +44,7 @@ class UserServiceTest {
 
     @Test
     void getUserByIdTest() {
+
         Mockito.when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(user1));
 
@@ -53,6 +55,7 @@ class UserServiceTest {
 
     @Test
     void createUserTest() {
+
         Mockito.when(userRepository.save(any()))
                 .thenReturn(user1);
 
@@ -61,6 +64,7 @@ class UserServiceTest {
 
     @Test
     void updateUserTest() {
+
         Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
@@ -73,7 +77,8 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserTest2() {
+    void updateUserNameTest() {
+
         Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
@@ -86,7 +91,8 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserTest3() {
+    void updateUserEmailTest() {
+
         Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user1));
 
@@ -100,6 +106,7 @@ class UserServiceTest {
 
     @Test
     void deleteUserTest() {
+
         userService.deleteUser(1L);
 
         Mockito.verify(userRepository).deleteById(1L);

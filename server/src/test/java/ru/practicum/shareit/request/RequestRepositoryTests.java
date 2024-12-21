@@ -46,6 +46,7 @@ public class RequestRepositoryTests {
 
     @Test
     void findByRequestorIdIsNot() {
+
         var userId = 10L;
         var requests = requestRepository.findByRequestorIdIsNot(userId);
         TypedQuery<Request> query =
@@ -66,13 +67,13 @@ public class RequestRepositoryTests {
 
     @Test
     void save() throws JsonProcessingException {
+
         requestRepository.save(request);
 
         TypedQuery<Request> query =
                 entityManager.createQuery("FROM Request WHERE id = :id", Request.class);
         Request sut = query.setParameter("id", request.getId()).getSingleResult();
 
-        //assertEquals(request, sut);
         assertEquals(objectMapper.writeValueAsString(RequestMapper.toRequestDto(request)), objectMapper.writeValueAsString(RequestMapper.toRequestDto(sut)));
     }
 }

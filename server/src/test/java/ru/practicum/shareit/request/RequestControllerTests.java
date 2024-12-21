@@ -51,6 +51,7 @@ class RequestControllerTests {
 
     @Test
     void getListYourRequestsTest() throws Exception {
+
         Mockito.when(requestService.getListYourRequests(anyLong()))
                 .thenReturn(Collections.emptyList());
 
@@ -65,7 +66,7 @@ class RequestControllerTests {
     }
 
     @Test
-    void getListYourRequestsTest1() throws Exception {
+    void getListYourRequestsValidationExceptionTest() throws Exception {
 
         doThrow(new ValidationException("")).when(requestService).getListYourRequests(anyLong());
         mvc.perform(get("/requests")
@@ -75,6 +76,7 @@ class RequestControllerTests {
 
     @Test
     void getListAllRequestsTest() throws Exception {
+
         Mockito.when(requestService.getListAllRequests(anyLong()))
                 .thenReturn(List.of(requestDto));
 
@@ -87,7 +89,7 @@ class RequestControllerTests {
     }
 
     @Test
-    void getListAllRequestsTest1() throws Exception {
+    void getListAllRequestsValidationExceptionTest() throws Exception {
 
         doThrow(new ValidationException("")).when(requestService).getListAllRequests(anyLong());
 
@@ -98,6 +100,7 @@ class RequestControllerTests {
 
     @Test
     void getRequestByIdTest() throws Exception {
+
         Mockito.when(requestService.getRequestById(anyLong(), anyLong()))
                 .thenReturn(requestDto);
 
@@ -110,7 +113,7 @@ class RequestControllerTests {
     }
 
     @Test
-    void getRequestByIdTest1() throws Exception {
+    void getRequestByIdValidationExceptionTest() throws Exception {
 
         doThrow(new ValidationException("")).when(requestService).getRequestById(anyLong(), anyLong());
 
@@ -121,6 +124,7 @@ class RequestControllerTests {
 
     @Test
     void createRequestTest() throws Exception {
+
         Mockito.when(requestService.createRequest(anyLong(), any()))
                 .thenReturn(requestDto);
 
@@ -137,7 +141,7 @@ class RequestControllerTests {
     }
 
     @Test
-    void createRequestTest1() throws Exception {
+    void createRequestValidationExceptionTest() throws Exception {
 
         doThrow(new ValidationException("")).when(requestService).createRequest(anyLong(), any());
         mvc.perform(post("/requests")

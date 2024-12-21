@@ -71,14 +71,13 @@ class BookingControllerTests {
     }
 
     @Test
-    void getListAllBookingsUserTest1() throws Exception {
+    void getListAllBookingsUserNotAvailableExceptionTest() throws Exception {
 
         doThrow(new NotAvailableException("")).when(bookingService).getListAllBookingsUser(anyLong(), anyString());
 
         mvc.perform(get("/bookings?state=ALL")
                         .header(headerUserId, 1L))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -99,7 +98,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void getBookingInfoTest1() throws Exception {
+    void getBookingInfoNotAvailableExceptionTest() throws Exception {
         doThrow(new NotAvailableException("")).when(bookingService).getBookingInfo(anyLong(), anyLong());
 
         mvc.perform(get("/bookings/{bookingId}", 1L)
@@ -107,8 +106,6 @@ class BookingControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(bookingItemDto)))
                 .andExpect(status().isBadRequest());
-
-
     }
 
     @Test
@@ -128,7 +125,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void getListBookingsAllItemsTest1() throws Exception {
+    void getListBookingsAllItemsNotAvailableExceptionTest() throws Exception {
 
         doThrow(new NotAvailableException("")).when(bookingService).getListBookingsAllItems(anyLong(), any());
 
@@ -136,7 +133,6 @@ class BookingControllerTests {
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
@@ -168,7 +164,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void responseBookingTest1() throws Exception {
+    void responseBookingAlreadyExistsExceptionTest() throws Exception {
         doThrow(new AlreadyExistsException("")).when(bookingService).responseBooking(anyLong(), anyLong(), anyBoolean());
 
         mvc.perform(patch("/bookings/1?approved=true")
@@ -178,7 +174,7 @@ class BookingControllerTests {
     }
 
     @Test
-    void responseBookingTest2() throws Exception {
+    void responseBookingNotAvailableExceptionTest() throws Exception {
 
         doThrow(new NotAvailableException("")).when(bookingService).responseBooking(anyLong(), anyLong(), anyBoolean());
 

@@ -56,6 +56,7 @@ class ItemControllerTests {
 
     @Test
     void getItemsByOwnerTest() throws Exception {
+
         when(itemService.getItemsByOwner(anyLong()))
                 .thenReturn(itemsDtoList);
 
@@ -70,7 +71,8 @@ class ItemControllerTests {
     }
 
     @Test
-    void getItemsByOwnerTest1() throws Exception {
+    void getItemsByOwnerValidationExceptionTest() throws Exception {
+
         doThrow(new ValidationException("")).when(itemService).getItemsByOwner(anyLong());
         mvc.perform(get("/items")
                         .header(headerUserId, 1L))
@@ -90,7 +92,7 @@ class ItemControllerTests {
     }
 
     @Test
-    void getInfoAboutItemByIdTest1() throws Exception {
+    void getInfoAboutItemByIdValidationExceptionTest() throws Exception {
 
         doThrow(new ValidationException("")).when(itemService).getInfoAboutItemById(1L, 1L);
 
@@ -99,11 +101,11 @@ class ItemControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(itemDto)))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
     void searchForItemPotentialTenantTest() throws Exception {
+
         when(itemService.searchForItemPotentialTenant(anyString()))
                 .thenReturn(List.of(itemDto));
 
@@ -115,7 +117,7 @@ class ItemControllerTests {
     }
 
     @Test
-    void searchForItemPotentialTenantTest1() throws Exception {
+    void searchForItemPotentialTenantExceptionTest() throws Exception {
 
         mvc.perform(get("/items/search?text="))
                 .andExpect(status().isOk())
@@ -123,7 +125,8 @@ class ItemControllerTests {
     }
 
     @Test
-    void searchForItemPotentialTenantTest2() throws Exception {
+    void searchForItemPotentialTenantValidationExceptionTest() throws Exception {
+
         doThrow(new ValidationException("")).when(itemService).searchForItemPotentialTenant(anyString());
 
         mvc.perform(get("/items/search?text=description"))
@@ -132,6 +135,7 @@ class ItemControllerTests {
 
     @Test
     void createItemTest() throws Exception {
+
         mvc.perform(post("/items")
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -142,7 +146,7 @@ class ItemControllerTests {
     }
 
     @Test
-    void createItemTest1() throws Exception {
+    void createItemValidationExceptionTest() throws Exception {
         doThrow(new ValidationException("")).when(itemService).createItem(1L, itemDto);
 
         mvc.perform(post("/items")
@@ -150,11 +154,11 @@ class ItemControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(itemDto)))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
     void updateItemTest() throws Exception {
+
         ItemDto updateItemDto = ItemDto.builder()
                 .id(1L)
                 .name("updateItem")
@@ -173,7 +177,8 @@ class ItemControllerTests {
     }
 
     @Test
-    void updateItemTest1() throws Exception {
+    void updateItemValidationExceptionTest() throws Exception {
+
         ItemDto updateItemDto = ItemDto.builder()
                 .id(1L)
                 .name("updateItem")
@@ -193,6 +198,7 @@ class ItemControllerTests {
 
     @Test
     void deleteItemTest() throws Exception {
+
         mvc.perform(delete("/items/{itemId}", 1L))
                 .andExpect(status().isOk());
 
@@ -200,16 +206,17 @@ class ItemControllerTests {
     }
 
     @Test
-    void deleteItemTest1() throws Exception {
+    void deleteItemValidationExceptionTest() throws Exception {
+
         doThrow(new ValidationException("")).when(itemService).deleteItem(1L);
 
         mvc.perform(delete("/items/{itemId}", 1L))
                 .andExpect(status().isBadRequest());
-
     }
 
     @Test
     void createCommentTest() throws Exception {
+
         when(itemService.createComment(anyLong(), anyLong(), any()))
                 .thenReturn(commentDto);
 
@@ -224,7 +231,7 @@ class ItemControllerTests {
     }
 
     @Test
-    void createCommentTest1() throws Exception {
+    void createCommentValidationExceptionTest() throws Exception {
 
         doThrow(new ValidationException("")).when(itemService).createComment(anyLong(), anyLong(), any());
 

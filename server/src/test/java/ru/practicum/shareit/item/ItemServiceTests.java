@@ -114,6 +114,7 @@ class ItemServiceTests {
 
     @Test
     void getItemsByOwnerTest() {
+
         item.setLastBooking(bookingList.getFirst());
         item.setNextBooking(bookingList.getLast());
         Mockito.when(itemRepository.findAllByOwnerId(anyLong()))
@@ -128,6 +129,7 @@ class ItemServiceTests {
 
     @Test
     void getInfoAboutItemByIdTest() {
+
         Mockito.when(itemRepository.findById(anyLong()))
                 .thenReturn(Optional.of(item));
         Mockito.when(commentRepository.findAllByItemId(anyLong()))
@@ -148,6 +150,7 @@ class ItemServiceTests {
 
     @Test
     void searchForItemPotentialTenantTest() {
+
         assertThat(itemService.searchForItemPotentialTenant(""), hasSize(0));
         assertThat(itemService.searchForItemPotentialTenant(null), hasSize(0));
 
@@ -159,6 +162,7 @@ class ItemServiceTests {
 
     @Test
     void createItemTest() {
+
         Mockito.when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(user));
         Mockito.when(requestService.getRequestById(anyLong(), anyLong()))
@@ -171,6 +175,7 @@ class ItemServiceTests {
 
     @Test
     void updateItemTest() {
+
         ItemDto itemDtoUpdate = ItemDto.builder()
                 .id(1L)
                 .name("ItemUpdate")
@@ -183,9 +188,7 @@ class ItemServiceTests {
                 .thenReturn(Optional.of(item));
         Mockito.when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(user));
-        //requestService.getRequestById(userId, itemDto.getRequestId());
-//        Mockito.when(requestService.getRequestById(anyLong(), any()))
-//                .thenReturn(requestDto);
+
         Mockito.when(requestRepository.findById(anyLong()))
                 .thenReturn(Optional.of(request));
         Mockito.when(itemRepository.save(any()))
@@ -196,6 +199,7 @@ class ItemServiceTests {
 
     @Test
     void deleteItemTest() {
+
         itemService.deleteItem(1L);
 
         Mockito.verify(itemRepository).deleteById(1L);
@@ -203,6 +207,7 @@ class ItemServiceTests {
 
     @Test
     void createCommentTest() {
+
         Mockito.when(itemRepository.findById(anyLong()))
                 .thenReturn(Optional.of(item));
         Mockito.when(userRepository.findById(anyLong()))
@@ -212,8 +217,6 @@ class ItemServiceTests {
                 .thenReturn(bookingList);
         Mockito.when(commentRepository.save(any()))
                 .thenReturn(comment);
-//        Mockito.when(commentRepository.save(any()))
-//                .thenAnswer(i -> i.getArgument(0));
 
         CommentDto testComment = itemService.createComment(1L, 1L, commentDto);
 

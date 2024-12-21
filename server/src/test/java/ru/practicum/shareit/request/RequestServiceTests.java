@@ -53,7 +53,8 @@ class RequestServiceTests {
             .build();
 
     @Test
-    void getListYourRequests() {
+    void getListYourRequestsTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Mockito.when(requestRepository.findByRequestorIdOrderByCreatedDesc(anyLong()))
@@ -66,6 +67,7 @@ class RequestServiceTests {
 
     @Test
     void getListAllRequestsTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Mockito.when(itemRepository.findAllByRequest(any()))
@@ -78,6 +80,7 @@ class RequestServiceTests {
 
     @Test
     void getRequestByIdTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Mockito.when(requestRepository.findById(any()))
@@ -90,6 +93,7 @@ class RequestServiceTests {
 
     @Test
     void createRequestTest() {
+
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
 
