@@ -20,6 +20,4 @@ public interface ItemService {
     void deleteItem(Long itemId);
 
     CommentDto createComment(Long userId, Long itemId, CommentDto commentDto);
-
-//    Long getOwnerId(Long itemId);
 }

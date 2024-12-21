@@ -154,12 +154,5 @@ public class ItemServiceImpl implements ItemService {
         }
         return itemDto;
     }
-
-//    @Override
-//    public Long getOwnerId(Long itemId) {
-//        return itemRepository.findById(itemId)
-//                .orElseThrow(() -> new NotFoundException(String.format("Вещь с ID " + itemId + "не найдена.")))
-//                .getOwner().getId();
-//    }
 }
 

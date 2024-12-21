@@ -106,9 +106,6 @@ public class BookingServiceImpl implements BookingService {
                 bookingItemDto.getEnd().equals(bookingItemDto.getStart())) {
             throw new DataTimeException("Неверное время бронирования. " + bookingItemDto.getStart() + " - " + bookingItemDto.getEnd());
         }
-//        if (bookingItemDto.getStart().isBefore(LocalDateTime.now())) {
-//            throw new ValidationException(String.format("Неверное время бронирования. %s %s", bookingItemDto.getStart(), bookingItemDto.getEnd()));
-//        }
         Item item = itemRepository.findById(bookingItemDto.getItemId())
                 .orElseThrow(() -> new NotFoundException(String.format("Вещь с Id " + bookingItemDto.getItemId() + " не найдена.")));
         if (item.getOwner().getId().equals(userId)) {
