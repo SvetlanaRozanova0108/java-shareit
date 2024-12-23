@@ -30,3 +30,4 @@ public class ItemDto {
         this.setAvailable(available);
     }
 }
+

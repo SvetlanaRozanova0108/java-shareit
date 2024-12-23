@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestSaveDto;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.request.service.RequestServiceImpl;
@@ -20,8 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class RequestServiceTests {
@@ -52,6 +52,10 @@ class RequestServiceTests {
             .items(new ArrayList<>())
             .build();
 
+    private final RequestSaveDto requestSaveDto = RequestSaveDto.builder()
+            .description("description")
+            .build();
+
     @Test
     void getListYourRequestsTest() {
 
@@ -72,10 +76,10 @@ class RequestServiceTests {
                 .thenReturn(userDto);
         Mockito.when(itemRepository.findAllByRequest(any()))
                 .thenReturn(new ArrayList<>());
-        Mockito.when(requestRepository.findByRequestorIdIsNot(anyLong()))
+        Mockito.when(requestRepository.findByRequestorIdIsNot(anyLong(), any()))
                 .thenReturn(List.of(request));
 
-        assertEquals(requestService.getListAllRequests(1L), List.of(requestDto));
+        assertEquals(requestService.getListAllRequests(1L, 0, 10), List.of(requestDto));
     }
 
     @Test
@@ -100,6 +104,6 @@ class RequestServiceTests {
         Mockito.when(requestRepository.save(any()))
                 .thenReturn(request);
 
-        assertEquals(requestService.createRequest(1L, requestDto), requestDto);
+        assertEquals(requestService.createRequest(1L, requestSaveDto), requestDto);
     }
 }

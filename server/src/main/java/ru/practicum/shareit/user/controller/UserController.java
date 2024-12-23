@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserSaveDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDto createUser(@Valid @RequestBody UserDto userDto) {
+    public UserDto createUser(@Valid @RequestBody UserSaveDto userDto) {
         try {
             log.info("Создание пользователя.");
             return userService.createUser(userDto);
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@RequestBody UserDto userDto,
+    public UserDto updateUser(@RequestBody UserSaveDto userDto,
                               @PathVariable Long userId) {
         try {
             log.info("Обновление пользователя.");

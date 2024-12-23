@@ -18,14 +18,6 @@ public class ItemMapper {
             result.setRequestId(item.getRequest().getId());
         }
 
-        if (item.getLastBooking() != null) {
-              result.setLastBooking(BookingMapper.toBookingBookerDto(item.getLastBooking()));
-        }
-
-        if (item.getNextBooking() != null) {
-              result.setNextBooking(BookingMapper.toBookingBookerDto(item.getNextBooking()));
-        }
-
         return result;
     }
 

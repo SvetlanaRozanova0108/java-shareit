@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.client;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestSaveDto;
+
+import java.util.Map;
 
 @Service
 public class RequestClient extends BaseClient {
@@ -26,15 +30,16 @@ public class RequestClient extends BaseClient {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> getListAllRequests(Long userId) {
-        return get("/all");
+    public ResponseEntity<Object> getListAllRequests(Long userId, @PositiveOrZero Integer page, @PositiveOrZero Integer pageSize) {
+        Map<String, Object> var = Map.of("page", page, "pageSize", pageSize);
+        return get("/all?page={page}&pageSize", userId, var);
     }
 
     public ResponseEntity<Object> getRequestById(Long userId, Long requestId) {
         return get("/" + requestId, userId);
     }
 
-    public ResponseEntity<Object> createRequest(Long userId, RequestDto requestDto) {
+    public ResponseEntity<Object> createRequest(Long userId, RequestSaveDto requestDto) {
         return post("", userId, requestDto);
     }
 }

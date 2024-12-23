@@ -10,7 +10,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentSaveDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemSaveDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.util.List;
@@ -45,6 +47,11 @@ class ItemControllerTests {
             .available(true)
             .requestId(1L)
             .build();
+    private final ItemSaveDto itemSaveDto = ItemSaveDto.builder()
+            .name("ItemName")
+            .description("description")
+            .available(true)
+            .build();
 
     private final List<ItemDto> itemsDtoList = List.of(
             new ItemDto(1L, "Name1", "Description1", true, null,
@@ -53,6 +60,10 @@ class ItemControllerTests {
                     null, null, null));
 
     private final CommentDto commentDto = CommentDto.builder().id(1L).text("Text").authorName("Name").build();
+    private final CommentSaveDto commentSaveDto = CommentSaveDto
+            .builder()
+            .text("Text")
+            .build();
 
     @Test
     void getItemsByOwnerTest() throws Exception {
@@ -139,20 +150,20 @@ class ItemControllerTests {
         mvc.perform(post("/items")
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(itemDto)))
+                        .content(mapper.writeValueAsString(itemSaveDto)))
                 .andExpect(status().isOk());
 
-        verify(itemService).createItem(1L, itemDto);
+        verify(itemService).createItem(1L, itemSaveDto);
     }
 
     @Test
     void createItemValidationExceptionTest() throws Exception {
-        doThrow(new ValidationException("")).when(itemService).createItem(1L, itemDto);
+        doThrow(new ValidationException("")).when(itemService).createItem(1L, itemSaveDto);
 
         mvc.perform(post("/items")
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(itemDto)))
+                        .content(mapper.writeValueAsString(itemSaveDto)))
                 .andExpect(status().isBadRequest());
     }
 

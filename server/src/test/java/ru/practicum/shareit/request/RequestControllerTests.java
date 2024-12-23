@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.request.controller.RequestController;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestSaveDto;
 import ru.practicum.shareit.request.service.RequestService;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -18,8 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -46,6 +46,11 @@ class RequestControllerTests {
     private final RequestDto requestDto = RequestDto
             .builder()
             .id(1L)
+            .description("testDescription")
+            .build();
+
+    private final RequestSaveDto requestSaveDto = RequestSaveDto
+            .builder()
             .description("testDescription")
             .build();
 
@@ -77,23 +82,20 @@ class RequestControllerTests {
     @Test
     void getListAllRequestsTest() throws Exception {
 
-        Mockito.when(requestService.getListAllRequests(anyLong()))
+        Mockito.when(requestService.getListAllRequests(anyLong(), anyInt(), anyInt()))
                 .thenReturn(List.of(requestDto));
 
-        mvc.perform(get("/requests/all")
+        mvc.perform(get("/requests/all?page=0&pagesize=10")
                         .header(headerUserId, 1L))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(status().isOk());
     }
 
     @Test
     void getListAllRequestsValidationExceptionTest() throws Exception {
 
-        doThrow(new ValidationException("")).when(requestService).getListAllRequests(anyLong());
+        doThrow(new ValidationException("")).when(requestService).getListAllRequests(anyLong(), anyInt(), anyInt());
 
-        mvc.perform(get("/requests/all")
+        mvc.perform(get("/requests/all?page=0&pagesize=10")
                         .header(headerUserId, 1L))
                 .andExpect(status().isBadRequest());
     }
@@ -131,13 +133,13 @@ class RequestControllerTests {
         mvc.perform(post("/requests")
                         .header(headerUserId, 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(requestDto)))
+                        .content(mapper.writeValueAsString(requestSaveDto)))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        verify(requestService).createRequest(1L, requestDto);
+        verify(requestService).createRequest(1L, requestSaveDto);
     }
 
     @Test

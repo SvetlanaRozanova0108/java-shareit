@@ -10,6 +10,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemSaveDto;
 
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class ItemClient extends BaseClient {
         return get("/search?text=" + text);
     }
 
-    public ResponseEntity<Object> createItem(Long userId, ItemDto itemDto) {
+    public ResponseEntity<Object> createItem(Long userId, ItemSaveDto itemDto) {
         return post("", userId, itemDto);
     }
 

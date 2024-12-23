@@ -1,10 +1,12 @@
 package ru.practicum.shareit.request.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestSaveDto;
 import ru.practicum.shareit.request.service.RequestService;
 
 import java.util.List;
@@ -30,10 +32,12 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    public List<RequestDto> getListAllRequests(@RequestHeader(headerUserId) Long userId) {
+    public List<RequestDto> getListAllRequests(@RequestHeader(headerUserId) Long userId,
+                                               @RequestParam(defaultValue = "0") String page,
+                                               @RequestParam(defaultValue = "20") String pageSize) {
         try {
             log.info("Получение списка всех запросов.");
-            return requestService.getListAllRequests(userId);
+            return requestService.getListAllRequests(userId, Integer.parseInt(page), Integer.parseInt(pageSize));
         } catch (Exception e) {
             log.error("Ошибка получения списка всех запросов.");
             throw e;
@@ -54,7 +58,7 @@ public class RequestController {
 
     @PostMapping
     public RequestDto createRequest(@RequestHeader(headerUserId) Long userId,
-                                    @Valid @RequestBody RequestDto requestDto) {
+                                    @Valid @RequestBody RequestSaveDto requestDto) {
         try {
             log.info("Создание запроса.");
             return requestService.createRequest(userId, requestDto);

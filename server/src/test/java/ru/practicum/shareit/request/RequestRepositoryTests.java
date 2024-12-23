@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.request.model.Request;
@@ -48,12 +50,16 @@ public class RequestRepositoryTests {
     void findByRequestorIdIsNot() {
 
         var userId = 10L;
-        var requests = requestRepository.findByRequestorIdIsNot(userId);
+        Integer offset = 0;
+        Integer limit = 10;
+        Pageable page = PageRequest.of(offset, limit);
+        var requests = requestRepository.findByRequestorIdIsNot(userId, page);
         TypedQuery<Request> query =
-                entityManager.createQuery(" select i from Request i " +
-                        "where i.requestor.id !=:id " +
-                        "order by created ", Request.class);
-        var sut = query.setParameter("id", userId).getResultList();
+                entityManager.createQuery("SELECT r FROM Request r WHERE r.requestor.id != :id " +
+                        "ORDER BY r.created " , Request.class).setMaxResults(limit)
+                        .setFirstResult(offset);
+        var sut = query.setParameter("id", userId)
+                .getResultList();
 
         assertEquals(requests.size(), sut.size());
     }

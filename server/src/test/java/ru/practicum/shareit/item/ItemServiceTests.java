@@ -10,6 +10,8 @@ import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentSaveDto;
+import ru.practicum.shareit.item.dto.ItemSaveDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -35,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ItemServiceTests {
@@ -111,20 +114,24 @@ class ItemServiceTests {
             .id(1L).text("Text")
             .authorName("User")
             .build();
+    private final CommentSaveDto commentSaveDto = CommentSaveDto
+            .builder()
+            .text("Text")
+            .build();
+    private final ItemSaveDto itemSaveDto = ItemSaveDto.builder()
+            .name("ItemName")
+            .description("description")
+            .available(true)
+            .build();
 
     @Test
     void getItemsByOwnerTest() {
 
-        item.setLastBooking(bookingList.getFirst());
-        item.setNextBooking(bookingList.getLast());
         Mockito.when(itemRepository.findAllByOwnerId(anyLong()))
                         .thenReturn(List.of(item));
 
         List<ItemDto> userItemsList = itemService.getItemsByOwner(1L);
-        assertEquals(userItemsList.get(0).getLastBooking().getId(), 1L);
-        assertEquals(userItemsList.get(0).getLastBooking().getBookerId(), 1L);
-        assertEquals(userItemsList.get(0).getNextBooking().getId(), 2L);
-        assertEquals(userItemsList.get(0).getNextBooking().getBookerId(), 1L);
+        verify(itemRepository).findAllByOwnerId(anyLong());
     }
 
     @Test
@@ -165,12 +172,10 @@ class ItemServiceTests {
 
         Mockito.when(userRepository.findById(anyLong()))
                 .thenReturn(Optional.of(user));
-        Mockito.when(requestService.getRequestById(anyLong(), anyLong()))
-                .thenReturn(requestDto);
         Mockito.when(itemRepository.save(any()))
                 .thenReturn(item);
 
-        assertEquals(itemService.createItem(1L, itemDto), itemDto);
+        assertEquals(itemService.createItem(1L, itemSaveDto), itemDto);
     }
 
     @Test
@@ -202,7 +207,7 @@ class ItemServiceTests {
 
         itemService.deleteItem(1L);
 
-        Mockito.verify(itemRepository).deleteById(1L);
+        verify(itemRepository).deleteById(1L);
     }
 
     @Test
@@ -218,7 +223,7 @@ class ItemServiceTests {
         Mockito.when(commentRepository.save(any()))
                 .thenReturn(comment);
 
-        CommentDto testComment = itemService.createComment(1L, 1L, commentDto);
+        CommentDto testComment = itemService.createComment(1L, 1L, commentSaveDto);
 
         assertEquals(testComment.getId(), commentDto.getId());
         assertEquals(testComment.getText(), commentDto.getText());

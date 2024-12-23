@@ -13,6 +13,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.controller.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserSaveDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
@@ -40,6 +41,7 @@ class UserControllerTests {
     @Autowired
     private ObjectMapper mapper;
     private final UserDto userDto = new UserDto(1L, "User1", "user1@email.com");
+    private final UserSaveDto userSaveDto = new UserSaveDto("User1", "user1@email.com");
 
     @Test
     void getAllUsersTest() throws Exception {
@@ -93,10 +95,10 @@ class UserControllerTests {
 
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDto)))
+                        .content(mapper.writeValueAsString(userSaveDto)))
                 .andExpect(status().isOk());
 
-        verify(userService).createUser(userDto);
+        verify(userService).createUser(userSaveDto);
     }
 
     @Test
@@ -106,17 +108,16 @@ class UserControllerTests {
 
         mvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDto)))
+                        .content(mapper.writeValueAsString(userSaveDto)))
                 .andExpect(status().isConflict());
 
-        verify(userService).createUser(userDto);
+        verify(userService).createUser(userSaveDto);
     }
 
     @Test
     void updateUserTest() throws Exception {
         var userId = 1L;
-        UserDto updateUserDto = UserDto.builder()
-                .id(userId)
+        UserSaveDto updateUserDto = UserSaveDto.builder()
                 .name("updateUser")
                 .email("updateuser@email.com")
                 .build();
@@ -133,8 +134,7 @@ class UserControllerTests {
     @Test
     void updateUserThrowBadRequestTest() throws Exception {
         var userId = 1L;
-        UserDto updateUserDto = UserDto.builder()
-                .id(userId)
+        UserSaveDto updateUserDto = UserSaveDto.builder()
                 .name("updateUser")
                 .email("updateuser@email.com")
                 .build();

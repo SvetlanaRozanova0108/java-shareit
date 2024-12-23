@@ -44,14 +44,6 @@ public class Item {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @Transient
-    private Booking lastBooking;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @Transient
-    private Booking nextBooking;
-
     public Item(Long id, String name, String description, Boolean available) {
         this.setId(id);
         this.setName(name);

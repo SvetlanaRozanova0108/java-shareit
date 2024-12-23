@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,10 @@ import ru.practicum.shareit.booking.dto.BookingItemDto;
 import ru.practicum.shareit.exception.NotAvailableException;
 import ru.practicum.shareit.exception.NotFoundException;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @Slf4j
 @Controller
 @AllArgsConstructor
@@ -21,19 +27,27 @@ public class BookingController {
 
     private final BookingClient bookingClient;
     private final String headerUserId = "X-Sharer-User-Id";
+    private final Set<String> stateTypes = new HashSet<>(Arrays.asList("ALL", "CURRENT", "PAST", "FUTURE", "WAITING", "REJECTED"));
 
     @GetMapping()
     public ResponseEntity<Object> getListAllBookingsUser(@RequestHeader(headerUserId) Long userId,
-                                                         @RequestParam(defaultValue = "ALL") String state,
+                                                         @RequestParam(defaultValue = "ALL") @NotBlank String state,
                                                          @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
                                                          @RequestParam(defaultValue = "10") @Positive Integer size) {
 
         try {
+            validateState(state);
             log.info("Получение списка всех бронирований текущего пользователя.");
             return bookingClient.getListAllBookingsUser(userId, state,from, size);
         } catch (Exception e) {
             log.error("Ошибка получения списка всех бронирований текущего пользователя.");
             throw e;
+        }
+    }
+
+    private void validateState(String state) {
+        if (!stateTypes.contains(state.toUpperCase())) {
+            throw new ValidationException("State имеет неизвестное значение.");
         }
     }
 
@@ -55,6 +69,7 @@ public class BookingController {
                                                     @RequestParam(defaultValue = "ALL") String state) {
 
         try {
+            validateState(state);
             log.info("Получение списка бронирований для всех вещей текущего пользователя.");
             return bookingClient.getListBookingsAllItems(ownerId, state);
         } catch (Exception e) {
@@ -80,7 +95,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> responseBooking(@RequestHeader(headerUserId) Long userId,
                                       @PathVariable Long bookingId,
-                                      @RequestParam Boolean approved) {
+                                      @RequestParam @NotBlank Boolean approved) {
 
         try {
             log.info("Подтверждение или отклонение запроса на бронирование.");

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.controller;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.client.ItemClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemSaveDto;
 
 @Slf4j
 @Controller
@@ -43,11 +45,8 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchForItemPotentialTenant(@RequestParam String text) {
+    public ResponseEntity<Object> searchForItemPotentialTenant(@RequestParam @NotBlank String text) {
         try {
-//            if (text == null || text.isBlank()) {
-//                return Collections.emptyList();
-//            }
             log.info("Поиск вещи потенциальным арендатором.");
             return itemClient.searchForItemPotentialTenant(text);
         } catch (Exception e) {
@@ -58,7 +57,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestHeader(headerUserId) Long userId,
-                                             @Valid @RequestBody ItemDto itemDto) {
+                                             @Valid @RequestBody ItemSaveDto itemDto) {
         try {
             log.info("Добавление новой вещи владельцем.");
             return itemClient.createItem(userId, itemDto);

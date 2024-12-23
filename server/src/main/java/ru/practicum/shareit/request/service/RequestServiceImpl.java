@@ -1,16 +1,21 @@
 package ru.practicum.shareit.request.service;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestSaveDto;
 import ru.practicum.shareit.request.mapper.RequestMapper;
 import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.request.repository.RequestRepository;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +43,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<RequestDto> getListAllRequests(Long userId) {
+    public List<RequestDto> getListAllRequests(Long userId, Integer pageNum, Integer pageSize) {
         UserMapper.toUser(userService.getUserById(userId));
         List<RequestDto> listRequestDto = new ArrayList<>();
-        List<Request> listRequest = requestRepository.findByRequestorIdIsNot(userId);
+        Pageable page = PageRequest.of(pageNum, pageSize);
+        List<Request> listRequest = requestRepository.findByRequestorIdIsNot(userId, page);
         listRequest.forEach(request -> {
             request.setItems(itemRepository.findAllByRequest(request));
             RequestDto requestDto = RequestMapper.toRequestDto(request);
@@ -62,7 +68,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     @Transactional
-    public RequestDto createRequest(Long userId, RequestDto requestDto) {
+    public RequestDto createRequest(Long userId, RequestSaveDto requestDto) {
         Request request = Request.builder()
                 .description(requestDto.getDescription())
                 .requestor(UserMapper.toUser(userService.getUserById(userId)))

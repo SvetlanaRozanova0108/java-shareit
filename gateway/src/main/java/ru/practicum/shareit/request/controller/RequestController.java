@@ -1,6 +1,7 @@
 package ru.practicum.shareit.request.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.client.RequestClient;
 import ru.practicum.shareit.request.dto.RequestDto;
+import ru.practicum.shareit.request.dto.RequestSaveDto;
 
 @Slf4j
 @Controller
@@ -30,10 +32,12 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getListAllRequests(@RequestHeader(headerUserId) Long userId) {
+    public ResponseEntity<Object> getListAllRequests(@RequestHeader(headerUserId) Long userId,
+                                                     @RequestParam(defaultValue = "0") @PositiveOrZero Integer page,
+                                                     @RequestParam(defaultValue = "20") @PositiveOrZero Integer pageSize) {
         try {
             log.info("Получение списка всех запросов.");
-            return requestClient.getListAllRequests(userId);
+            return requestClient.getListAllRequests(userId, page, pageSize);
         } catch (Exception e) {
             log.error("Ошибка получения списка всех запросов.");
             throw e;
@@ -54,7 +58,7 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Object> createRequest(@RequestHeader(headerUserId) Long userId,
-                                    @Valid @RequestBody RequestDto requestDto) {
+                                    @Valid @RequestBody RequestSaveDto requestDto) {
         try {
             log.info("Создание запроса.");
             return requestClient.createRequest(userId, requestDto);

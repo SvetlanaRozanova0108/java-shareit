@@ -33,11 +33,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
 @ExtendWith(MockitoExtension.class)
@@ -195,7 +194,7 @@ class BookingServiceTests {
 
         bookingService.createBooking(2L, bookingItemDto);
 
-        Mockito.verify(bookingRepository).save(any());
+        verify(bookingRepository).save(any());
     }
 
     @Test
@@ -208,6 +207,38 @@ class BookingServiceTests {
                 () -> bookingService.responseBooking(1L, 1L, true));
 
         assertEquals(e.getMessage(), "Вещь уже забронирована.");
+    }
+
+    @Test
+    void responseBookingNotAvailableExceptionTest() {
+
+        Mockito.when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.of(booking));
+
+        Exception e = assertThrows(NotAvailableException.class,
+                () -> bookingService.responseBooking(1L, 10L, true));
+
+        assertEquals(e.getMessage(), "У пользователя с ID 10 нет доступа к бронированию.");
+    }
+
+    @Test
+    void responseBookingStatusApproveTrueTest() {
+        booking.setStatus(BookingStatus.WAITING);
+        Mockito.when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.of(booking));
+
+        bookingService.responseBooking(1L, 1L, true);
+        verify(bookingRepository).update(BookingStatus.APPROVED, 1L);
+    }
+
+    @Test
+    void responseBookingStatusApproveFalseTest() {
+        booking.setStatus(BookingStatus.WAITING);
+        Mockito.when(bookingRepository.findById(anyLong()))
+                .thenReturn(Optional.of(booking));
+
+        bookingService.responseBooking(1L, 1L, false);
+        verify(bookingRepository).update(BookingStatus.REJECTED, 1L);
     }
 
     @ParameterizedTest

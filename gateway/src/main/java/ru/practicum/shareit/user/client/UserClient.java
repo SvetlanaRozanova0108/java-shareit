@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserSaveDto;
 
 @Service
 public class UserClient extends BaseClient {
@@ -30,11 +31,11 @@ public class UserClient extends BaseClient {
         return get("/" + userId.toString());
     }
 
-    public ResponseEntity<Object> createUser(UserDto userDto) {
+    public ResponseEntity<Object> createUser(UserSaveDto userDto) {
         return post("", userDto);
     }
 
-    public ResponseEntity<Object> updateUser(UserDto userDto, Long userId) {
+    public ResponseEntity<Object> updateUser(UserSaveDto userDto, Long userId) {
         return patch("/" + userId.toString(), userDto);
     }
 

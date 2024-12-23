@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.client.UserClient;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserSaveDto;
 
 @Slf4j
 @Controller
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserSaveDto userDto) {
         try {
             log.info("Создание пользователя.");
             return userClient.createUser(userDto);
@@ -52,7 +53,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@RequestBody UserDto userDto,
+    public ResponseEntity<Object> updateUser(@RequestBody UserSaveDto userDto,
                               @PathVariable Long userId) {
         try {
             log.info("Обновление пользователя.");

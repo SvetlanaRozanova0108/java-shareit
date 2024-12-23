@@ -23,7 +23,7 @@ public class ItemRepositoryTests {
     private final EntityManager entityManager;
     private final ItemRepository itemRepository;
     private final User user1 = new User(20L, "User1", "user1@email.com");
-    private final Item item = new Item(1L, "item", "description", true, user1, null, null, null, null);
+    private final Item item = new Item(1L, "item", "description", true, user1, null, null);
 
     @Test
     void findAllByOwnerId() {

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserSaveDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.model.User;
@@ -36,13 +37,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto createUser(UserDto userDto) {
-        return UserMapper.toUserDto(userRepository.save(UserMapper.toUser(userDto)));
+    public UserDto createUser(UserSaveDto userDto) {
+        var user = User.builder()
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .build();
+
+        return UserMapper.toUserDto(userRepository.save(user));
     }
 
     @Override
     @Transactional
-    public UserDto updateUser(UserDto userDto, Long userId) {
+    public UserDto updateUser(UserSaveDto userDto, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("Пользователь с Id = " + userId + " не найден.")));
         if (userDto.getName() != null) {

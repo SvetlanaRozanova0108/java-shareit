@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserSaveDto;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
@@ -28,6 +29,7 @@ class UserServiceTest {
     private UserRepository userRepository;
     private final User user1 = new User(1L, "User1", "user1@email.com");
     private final UserDto userDto1 = new UserDto(1L, "User1", "user1@email.com");
+    private final UserSaveDto userSaveDto1 = new UserSaveDto("User1", "user1@email.com");
     private final User user2 = new User(2L, "User2", "user2@email.ru");
     private final UserDto userDto2 = new UserDto(2L, "User2", "user2@email.ru");
 
@@ -59,7 +61,7 @@ class UserServiceTest {
         Mockito.when(userRepository.save(any()))
                 .thenReturn(user1);
 
-        assertEquals(userService.createUser(userDto1), userDto1);
+        assertEquals(userService.createUser(userSaveDto1), userDto1);
     }
 
     @Test
@@ -69,11 +71,12 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user1));
 
         User updateUser = new User(1L, "updateUser", "updateUser@email.ru");
-        UserDto updateUserDto = new UserDto(1L, "updateUser", "updateUser@email.ru");
+        UserDto updateUserAfterDto = new UserDto(1l, "updateUser", "updateUser@email.ru");
+        UserSaveDto updateUserDto = new UserSaveDto("updateUser", "updateUser@email.ru");
         Mockito.when(userRepository.save(any()))
                 .thenReturn(updateUser);
 
-        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserDto);
+        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserAfterDto);
     }
 
     @Test
@@ -83,11 +86,12 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user1));
 
         User updateUser = new User(1L, null, "updateUser@email.ru");
-        UserDto updateUserDto = new UserDto(1L, null, "updateUser@email.ru");
+        UserDto updateUserAfterDto = new UserDto(1L, null, "updateUser@email.ru");
+        UserSaveDto updateUserDto = new UserSaveDto(null, "updateUser@email.ru");
         Mockito.when(userRepository.save(any()))
                 .thenReturn(updateUser);
 
-        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserDto);
+        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserAfterDto);
     }
 
     @Test
@@ -97,11 +101,12 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user1));
 
         User updateUser = new User(1L, "updateUser", null);
-        UserDto updateUserDto = new UserDto(1L, "updateUser", null);
+        UserDto updateUserAfterDto = new UserDto(1l, "updateUser", null);
+        UserSaveDto updateUserDto = new UserSaveDto( "updateUser", null);
         Mockito.when(userRepository.save(any()))
                 .thenReturn(updateUser);
 
-        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserDto);
+        assertEquals(userService.updateUser(updateUserDto, 1L), updateUserAfterDto);
     }
 
     @Test
