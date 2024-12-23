@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.client.ItemClient;
 import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.CommentSaveDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemSaveDto;
 
@@ -94,8 +95,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createComment(@RequestHeader(headerUserId) Long userId,
-                                    @PathVariable Long itemId,
-                                    @Valid @RequestBody CommentDto commentDto) {
+                                                @PathVariable Long itemId,
+                                                @Valid @RequestBody CommentSaveDto commentDto) {
         try {
             log.info("Добавление комментария.");
             return itemClient.createComment(userId, itemId, commentDto);

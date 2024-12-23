@@ -63,7 +63,9 @@ public class ItemServiceImpl implements ItemService {
             updateBooking(result);
         }
         List<Comment> comments = commentRepository.findAllByItemId(result.getId());
-        result.setComments(CommentMapper.toListDto(comments));
+        result.setComments(comments.stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList()));
         return result;
     }
 
