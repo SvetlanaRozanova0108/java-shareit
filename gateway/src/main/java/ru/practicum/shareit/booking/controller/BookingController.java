@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
@@ -95,7 +96,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> responseBooking(@RequestHeader(headerUserId) Long userId,
                                       @PathVariable Long bookingId,
-                                      @RequestParam @NotBlank Boolean approved) {
+                                      @RequestParam Boolean approved) {
 
         try {
             log.info("Подтверждение или отклонение запроса на бронирование.");

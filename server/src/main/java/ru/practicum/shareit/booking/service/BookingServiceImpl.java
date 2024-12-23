@@ -40,6 +40,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getListAllBookingsUser(Long userId, String state) {
         userService.getUserById(userId);
         LocalDateTime time = LocalDateTime.now();
+        state = state.toUpperCase();
         log.info("userId: " + userId + ", state: " + state);
         switch (state) {
             case "ALL":
@@ -79,6 +80,7 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getListBookingsAllItems(Long ownerId, String state) {
         userService.getUserById(ownerId);
         LocalDateTime time = LocalDateTime.now();
+        state = state.toUpperCase();
         switch (state) {
             case "ALL":
                 return BookingMapper.toBookingDto(bookingRepository.findAllByItemIdOrderByStartDesc(ownerId));

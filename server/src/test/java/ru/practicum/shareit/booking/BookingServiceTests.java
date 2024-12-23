@@ -34,8 +34,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -122,7 +121,7 @@ class BookingServiceTests {
         Exception e = assertThrows(NotFoundException.class,
                 () -> bookingService.getListAllBookingsUser(1L, "UnknownState"));
 
-        assertEquals(e.getMessage(), "Состояние UnknownState не найдено.");
+        assertEquals(e.getMessage(), "Состояние UNKNOWNSTATE не найдено.");
     }
 
     @Test
@@ -133,8 +132,29 @@ class BookingServiceTests {
         Exception e = assertThrows(NotFoundException.class,
                 () -> bookingService.getListBookingsAllItems(1L, "UnknownState"));
 
-        assertEquals(e.getMessage(), "Состояние UnknownState не найдено.");
+        assertEquals(e.getMessage(), "Состояние UNKNOWNSTATE не найдено.");
     }
+
+    @Test
+    void getListAllBookingsUserStatusRejectedTest() {
+
+        Mockito.when(userService.getUserById(anyLong()))
+                .thenReturn(userDto);
+        bookingService.getListAllBookingsUser(1L, "REJECTED");
+
+        verify(bookingRepository).findAllByBookerIdAndStatusOrderByStartDesc(anyLong(), eq(BookingStatus.REJECTED));
+    }
+
+    @Test
+    void getListBookingsAllItemsStatusRejectedTest() {
+
+        Mockito.when(userService.getUserById(anyLong()))
+                .thenReturn(userDto);
+        bookingService.getListBookingsAllItems(1L, "REJECTED");
+
+        verify(bookingRepository).findAllByItemIdInAndStatusOrderByStartDesc(anyLong(), any(), eq(BookingStatus.REJECTED));
+    }
+
 
     @Test
     void createBookingTimeDataExceptionTest() {
