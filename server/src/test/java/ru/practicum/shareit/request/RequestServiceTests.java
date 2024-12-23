@@ -51,7 +51,6 @@ class RequestServiceTests {
             .requestor(userDto)
             .items(new ArrayList<>())
             .build();
-
     private final RequestSaveDto requestSaveDto = RequestSaveDto.builder()
             .description("description")
             .build();

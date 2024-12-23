@@ -32,10 +32,4 @@ public class Comment {
 
     @Column(name = "created")
     private LocalDateTime created;
-
-//    public Comment(Long id, String text, LocalDateTime created) {
-//        this.id = id;
-//        this.text = text;
-//        this.created = created;
-//    }
 }

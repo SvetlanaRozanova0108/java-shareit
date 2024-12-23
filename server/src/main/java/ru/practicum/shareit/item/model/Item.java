@@ -42,11 +42,4 @@ public class Item {
     @Transient
     @OneToMany(fetch = FetchType.LAZY)
     private List<Comment> comments;
-
-//    public Item(Long id, String name, String description, Boolean available) {
-//        this.setId(id);
-//        this.setName(name);
-//        this.setDescription(description);
-//        this.setAvailable(available);
-//    }
 }
