@@ -71,7 +71,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user1));
 
         User updateUser = new User(1L, "updateUser", "updateUser@email.ru");
-        UserDto updateUserAfterDto = new UserDto(1l, "updateUser", "updateUser@email.ru");
+        UserDto updateUserAfterDto = new UserDto(1L, "updateUser", "updateUser@email.ru");
         UserSaveDto updateUserDto = new UserSaveDto("updateUser", "updateUser@email.ru");
         Mockito.when(userRepository.save(any()))
                 .thenReturn(updateUser);
@@ -101,8 +101,8 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user1));
 
         User updateUser = new User(1L, "updateUser", null);
-        UserDto updateUserAfterDto = new UserDto(1l, "updateUser", null);
-        UserSaveDto updateUserDto = new UserSaveDto( "updateUser", null);
+        UserDto updateUserAfterDto = new UserDto(1L, "updateUser", null);
+        UserSaveDto updateUserDto = new UserSaveDto("updateUser", null);
         Mockito.when(userRepository.save(any()))
                 .thenReturn(updateUser);
 

@@ -14,5 +14,4 @@ public class RequestSaveDto {
     
     @NotBlank
     private String description;
-
 }
