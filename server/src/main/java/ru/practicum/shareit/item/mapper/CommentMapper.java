@@ -14,13 +14,13 @@ public class CommentMapper {
                 comment.getAuthor().getName(),
                 comment.getCreated());
     }
-
-    public static Comment toComment(CommentDto commentDto) {
-        return new Comment(
-                commentDto.getId(),
-                commentDto.getText(),
-                commentDto.getCreated());
-    }
+//
+//    public static Comment toComment(CommentDto commentDto) {
+//        return new Comment(
+//                commentDto.getId(),
+//                commentDto.getText(),
+//                commentDto.getCreated());
+//    }
 
     public static List<CommentDto> toListDto(List<Comment> comments) {
         return comments.stream()

@@ -19,12 +19,12 @@ public class ItemMapper {
 
         return result;
     }
-
-    public static Item toItem(ItemDto itemDto) {
-        return new Item(
-                itemDto.getId(),
-                itemDto.getName(),
-                itemDto.getDescription(),
-                itemDto.getAvailable());
-    }
+//
+//    public static Item toItem(ItemDto itemDto) {
+//        return new Item(
+//                itemDto.getId(),
+//                itemDto.getName(),
+//                itemDto.getDescription(),
+//                itemDto.getAvailable());
+//    }
 }
