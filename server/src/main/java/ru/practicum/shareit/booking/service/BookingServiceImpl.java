@@ -37,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
 
     @Override
-    public List<BookingDto> getListAllBookingsUser(Long userId, String state, Integer from, Integer size) {
+    public List<BookingDto> getListAllBookingsUser(Long userId, String state) {
         userService.getUserById(userId);
         LocalDateTime time = LocalDateTime.now();
         state = state.toUpperCase();

@@ -57,7 +57,7 @@ class BookingControllerTests {
 
     @Test
     void getListAllBookingsUserTest() throws Exception {
-        Mockito.when(bookingService.getListAllBookingsUser(anyLong(), anyString(), anyInt(), anyInt()))
+        Mockito.when(bookingService.getListAllBookingsUser(anyLong(), anyString()))
                 .thenReturn(List.of(bookingDto));
 
         String result = mvc.perform(get("/bookings?state=ALL")
@@ -73,7 +73,7 @@ class BookingControllerTests {
     @Test
     void getListAllBookingsUserNotAvailableExceptionTest() throws Exception {
 
-        doThrow(new NotAvailableException("")).when(bookingService).getListAllBookingsUser(anyLong(), anyString(), anyInt(), anyInt());
+        doThrow(new NotAvailableException("")).when(bookingService).getListAllBookingsUser(anyLong(), anyString());
 
         mvc.perform(get("/bookings?state=ALL")
                         .header(headerUserId, 1L))
