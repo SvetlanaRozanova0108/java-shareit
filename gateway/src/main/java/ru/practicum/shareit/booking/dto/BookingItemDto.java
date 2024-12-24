@@ -17,11 +17,9 @@ public class BookingItemDto {
 
     @NotNull
     private Long itemId;
-
     @NotNull
     @Future
     private LocalDateTime start;
-
     @NotNull
     @Future
     private LocalDateTime end;
