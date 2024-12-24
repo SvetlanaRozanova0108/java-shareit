@@ -1,4 +1,5 @@
 package ru.practicum.shareit.booking.repository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,20 +29,20 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b "
             + "WHERE b.booker.id = :bookerId "
             + "ORDER BY b.start DESC")
-    List<Booking> findAllByBookerIdOrderByStartDesc(Long bookerId);
+    List<Booking> findAllByBookerIdOrderByStartDesc(Long bookerId, Pageable pageable);
 
     //StateCurrentUser
     @Query("SELECT b from Booking b " +
             "WHERE b.booker.id = :id " +
             "AND :time > b.start " +
             "AND :time < b.end ")
-    List<Booking> findAllCurrentBookingsByUser(Long id, LocalDateTime time);
+    List<Booking> findAllCurrentBookingsByUser(Long id, LocalDateTime time, Pageable pageable);
 
     //StatePastUser
-    List<Booking> findAllByBookerIdAndEndBeforeOrderByStartDesc(Long id, LocalDateTime time);
+    List<Booking> findAllByBookerIdAndEndBeforeOrderByStartDesc(Long id, LocalDateTime time, Pageable pageable);
 
     //StateFutureUser
-    List<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(Long id, LocalDateTime time);
+    List<Booking> findAllByBookerIdAndStartAfterOrderByStartDesc(Long id, LocalDateTime time, Pageable pageable);
 
     //StateWaitingAndRejectedUser
     @Query("SELECT b FROM Booking b "
@@ -49,7 +50,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             + "WHERE i.owner.id = :ownerId "
             + "AND b.status = :status "
             + "ORDER BY b.start DESC")
-    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(Long ownerId, BookingStatus status);
+    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(Long ownerId, BookingStatus status, Pageable pageable);
 
     //StateAllItem
     List<Booking> findAllByItemIdOrderByStartDesc(Long itemId);

@@ -56,7 +56,8 @@ public class RequestRepositoryTests {
         var requests = requestRepository.findByRequestorIdIsNot(userId, page);
         TypedQuery<Request> query =
                 entityManager.createQuery("SELECT r FROM Request r WHERE r.requestor.id != :id " +
-                        "ORDER BY r.created ", Request.class).setMaxResults(limit)
+                                "ORDER BY r.created ", Request.class)
+                        .setMaxResults(limit)
                         .setFirstResult(offset);
         var sut = query.setParameter("id", userId)
                 .getResultList();

@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -21,7 +22,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
-
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -37,29 +38,29 @@ public class BookingServiceImpl implements BookingService {
     private final ItemRepository itemRepository;
 
     @Override
-    public List<BookingDto> getListAllBookingsUser(Long userId, String state) {
+    public List<BookingDto> getListAllBookingsUser(Long userId, String state, Integer page, Integer pageSize) {
         userService.getUserById(userId);
+        Pageable pageable = (Pageable) PageRequest.of(page, pageSize);
         LocalDateTime time = LocalDateTime.now();
         state = state.toUpperCase();
-        log.info("userId: " + userId + ", state: " + state);
         switch (state) {
             case "ALL":
-                return BookingMapper.toBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(userId));
+                return BookingMapper.toBookingDto(bookingRepository.findAllByBookerIdOrderByStartDesc(userId, pageable));
             case "CURRENT":
                 return BookingMapper.toBookingDto(bookingRepository
-                        .findAllCurrentBookingsByUser(userId, time));
+                        .findAllCurrentBookingsByUser(userId, time, pageable));
             case "PAST":
                 return BookingMapper.toBookingDto(bookingRepository
-                        .findAllByBookerIdAndEndBeforeOrderByStartDesc(userId, time));
+                        .findAllByBookerIdAndEndBeforeOrderByStartDesc(userId, time, pageable));
             case "FUTURE":
                 return BookingMapper.toBookingDto(bookingRepository
-                        .findAllByBookerIdAndStartAfterOrderByStartDesc(userId, time));
+                        .findAllByBookerIdAndStartAfterOrderByStartDesc(userId, time, pageable));
             case "WAITING":
                 return BookingMapper.toBookingDto(bookingRepository
-                        .findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING));
+                        .findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.WAITING, pageable));
             case "REJECTED":
                 return BookingMapper.toBookingDto(bookingRepository
-                        .findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED));
+                        .findAllByBookerIdAndStatusOrderByStartDesc(userId, BookingStatus.REJECTED, pageable));
         }
         throw new NotFoundException(String.format("Состояние " + state + " не найдено."));
     }

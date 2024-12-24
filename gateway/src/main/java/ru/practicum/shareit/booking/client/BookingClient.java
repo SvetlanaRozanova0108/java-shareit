@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.client;
 
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -25,9 +26,9 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getListAllBookingsUser(Long userId, String state) {
-        Map<String, Object> var = Map.of("state", state);
-        return get("?state={state}&from={from}&size={size}", userId, var);
+    public ResponseEntity<Object> getListAllBookingsUser(Long userId, String state, @PositiveOrZero Integer page, @PositiveOrZero Integer pageSize) {
+        Map<String, Object> var = Map.of("state", state, "page", page, "pageSize", pageSize);
+        return get("?state={state}&page={page}&pageSize={pageSize}", userId, var);
     }
 
     public ResponseEntity<Object> getBookingInfo(Long userId, Long bookingId) {

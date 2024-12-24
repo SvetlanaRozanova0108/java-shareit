@@ -119,7 +119,7 @@ class BookingServiceTests {
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Exception e = assertThrows(NotFoundException.class,
-                () -> bookingService.getListAllBookingsUser(1L, "UnknownState"));
+                () -> bookingService.getListAllBookingsUser(1L, "UnknownState", 0, 10));
 
         assertEquals(e.getMessage(), "Состояние UNKNOWNSTATE не найдено.");
     }
@@ -140,9 +140,9 @@ class BookingServiceTests {
 
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
-        bookingService.getListAllBookingsUser(1L, "REJECTED");
+        bookingService.getListAllBookingsUser(1L, "REJECTED", 0, 10);
 
-        verify(bookingRepository).findAllByBookerIdAndStatusOrderByStartDesc(anyLong(), eq(BookingStatus.REJECTED));
+        verify(bookingRepository).findAllByBookerIdAndStatusOrderByStartDesc(anyLong(), eq(BookingStatus.REJECTED), any());
     }
 
     @Test
@@ -283,17 +283,17 @@ class BookingServiceTests {
         Mockito.when(itemRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(testItem));
         Mockito.when(userRepository.existsById(Mockito.anyLong())).thenReturn(true);
         Mockito.when(bookingRepository.save(any(Booking.class))).thenReturn(testBooking);
-        Mockito.when(bookingRepository.findAllByBookerIdOrderByStartDesc(Mockito.anyLong()))
+        Mockito.when(bookingRepository.findAllByBookerIdOrderByStartDesc(Mockito.anyLong(), any()))
                 .thenReturn(List.of(testBooking));
         Mockito.when(bookingRepository.findAllCurrentBookingsByUser(
-                Mockito.anyLong(),any())).thenReturn(List.of(testBooking));
+                Mockito.anyLong(),any(), any())).thenReturn(List.of(testBooking));
         Mockito.when(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(Mockito.anyLong(),
-                any())).thenReturn(List.of(testBooking));
+                any(), any())).thenReturn(List.of(testBooking));
         Mockito.when(bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(Mockito.anyLong(),
-                any())).thenReturn(List.of(testBooking));
+                any(), any())).thenReturn(List.of(testBooking));
         Mockito.when(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(Mockito.anyLong(),
-                any())).thenReturn(List.of(testBooking));
-        List<BookingDto> bookings = bookingService.getListAllBookingsUser(testUser.getId(), state);
+                any(), any())).thenReturn(List.of(testBooking));
+        List<BookingDto> bookings = bookingService.getListAllBookingsUser(testUser.getId(), state, 0, 10);
 
         assertFalse(bookings.isEmpty());
         assertEquals(bookings.get(0).getId(), 1L);

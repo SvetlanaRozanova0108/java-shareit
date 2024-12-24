@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface BookingService {
 
-    List<BookingDto> getListAllBookingsUser(Long userId, String state);
+    List<BookingDto> getListAllBookingsUser(Long userId, String state, Integer page, Integer pageSize);
 
     BookingDto getBookingInfo(Long userId, Long bookingId);
 

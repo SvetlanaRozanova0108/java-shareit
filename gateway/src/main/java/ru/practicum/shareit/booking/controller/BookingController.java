@@ -3,6 +3,8 @@ package ru.practicum.shareit.booking.controller;
 import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +31,14 @@ public class BookingController {
 
     @GetMapping()
     public ResponseEntity<Object> getListAllBookingsUser(@RequestHeader(headerUserId) Long userId,
-                                                         @RequestParam(defaultValue = "ALL") @NotBlank String state) {
+                                                         @RequestParam(defaultValue = "ALL") @NotBlank String state,
+                                                         @PositiveOrZero @RequestParam(defaultValue = "0") Integer page,
+                                                         @Positive @RequestParam(defaultValue = "10") Integer pageSize) {
 
         try {
             validateState(state);
             log.info("Получение списка всех бронирований текущего пользователя.");
-            return bookingClient.getListAllBookingsUser(userId, state);
+            return bookingClient.getListAllBookingsUser(userId, state, page, pageSize);
         } catch (Exception e) {
             log.error("Ошибка получения списка всех бронирований текущего пользователя.");
             throw e;

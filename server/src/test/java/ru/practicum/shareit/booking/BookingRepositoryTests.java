@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -66,17 +68,23 @@ public class BookingRepositoryTests {
 
     @Test
     void findAllByBookerIdOrderByStartDesc() {
-
+        Integer offset = 0;
+        Integer limit = 10;
+        Pageable pageable = PageRequest.of(offset, limit);
         var bookerId = 10L;
-        var bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId);
+        var bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId, pageable);
 
         TypedQuery<Booking> query =
                 entityManager.createQuery("SELECT b FROM Booking b "
                         + "WHERE b.booker.id = :bookerId "
-                        + "ORDER BY b.start DESC", Booking.class);
+                                + "ORDER BY b.start DESC", Booking.class)
+                        .setMaxResults(limit)
+                        .setFirstResult(offset);
 
         var sut = query
                 .setParameter("bookerId", bookerId)
+                .setMaxResults(limit)
+                .setFirstResult(offset)
                 .getResultList();
 
         assertEquals(bookings.size(), sut.size());
@@ -84,16 +92,20 @@ public class BookingRepositoryTests {
 
     @Test
     void findAllCurrentBookingsByUser() {
-
+        Integer offset = 0;
+        Integer limit = 10;
+        Pageable pageable = PageRequest.of(offset, limit);
         var id = 10L;
         var time = LocalDateTime.now();
-        var bookings = bookingRepository.findAllCurrentBookingsByUser(id, time);
+        var bookings = bookingRepository.findAllCurrentBookingsByUser(id, time, pageable);
 
         TypedQuery<Booking> query =
                 entityManager.createQuery("SELECT b from Booking b " +
                         "WHERE b.booker.id = :id " +
                         "AND :time > b.start " +
-                        "AND :time < b.end ", Booking.class);
+                        "AND :time < b.end ", Booking.class)
+                        .setMaxResults(limit)
+                        .setFirstResult(offset);
 
         var sut = query
                 .setParameter("id", id)
@@ -105,16 +117,20 @@ public class BookingRepositoryTests {
 
     @Test
     void findAllByBookerIdAndEndBeforeOrderByStartDesc() {
-
+        Integer offset = 0;
+        Integer limit = 10;
+        Pageable pageable = PageRequest.of(offset, limit);
         var id = 10L;
         var time = LocalDateTime.now();
-        var bookings = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(id, time);
+        var bookings = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(id, time, pageable);
 
         TypedQuery<Booking> query =
                 entityManager.createQuery("SELECT b from Booking b " +
                         "WHERE b.booker.id = :id " +
                         "AND :time > b.start " +
-                        "AND :time < b.end ", Booking.class);
+                        "AND :time < b.end ", Booking.class)
+                        .setMaxResults(limit)
+                        .setFirstResult(offset);
 
         var sut = query
                 .setParameter("id", id)
@@ -126,16 +142,20 @@ public class BookingRepositoryTests {
 
     @Test
     void findAllByBookerIdAndStartAfterOrderByStartDesc() {
-
+        Integer offset = 0;
+        Integer limit = 10;
+        Pageable pageable = PageRequest.of(offset, limit);
         var id = 10L;
         var time = LocalDateTime.now();
-        var bookings = bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(id, time);
+        var bookings = bookingRepository.findAllByBookerIdAndStartAfterOrderByStartDesc(id, time, pageable);
 
         TypedQuery<Booking> query =
                 entityManager.createQuery("SELECT b from Booking b " +
                         "WHERE b.booker.id = :id " +
                         "AND :time > b.start " +
-                        "AND :time < b.end ", Booking.class);
+                        "AND :time < b.end ", Booking.class)
+                        .setMaxResults(limit)
+                        .setFirstResult(offset);
 
         var sut = query
                 .setParameter("id", id)
@@ -147,17 +167,21 @@ public class BookingRepositoryTests {
 
     @Test
     void findAllByBookerIdAndStatusOrderByStartDesc() {
-
+        Integer offset = 0;
+        Integer limit = 10;
+        Pageable pageable = PageRequest.of(offset, limit);
         var ownerId = 10L;
         var status = BookingStatus.APPROVED;
-        var bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(ownerId, status);
+        var bookings = bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(ownerId, status, pageable);
 
         TypedQuery<Booking> query =
                 entityManager.createQuery("SELECT b FROM Booking b "
                         + "INNER JOIN Item i ON b.item.id = i.id "
                         + "WHERE i.owner.id = :ownerId "
                         + "AND b.status = :status "
-                        + "ORDER BY b.start DESC", Booking.class);
+                        + "ORDER BY b.start DESC", Booking.class)
+                        .setMaxResults(limit)
+                        .setFirstResult(offset);
 
         var sut = query
                 .setParameter("ownerId", ownerId)
