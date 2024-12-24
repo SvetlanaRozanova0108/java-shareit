@@ -97,7 +97,6 @@ public class BookingServiceImpl implements BookingService {
                 return BookingMapper.toBookingDto(bookingRepository
                         .findAllByItemIdInAndStatusOrderByStartDesc(ownerId, time, BookingStatus.REJECTED));
         }
-
         throw new NotFoundException(String.format("Состояние " + state + " не найдено."));
     }
 
