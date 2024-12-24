@@ -119,7 +119,7 @@ class BookingServiceTests {
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
         Exception e = assertThrows(NotFoundException.class,
-                () -> bookingService.getListAllBookingsUser(1L, "UnknownState"));
+                () -> bookingService.getListAllBookingsUser(1L, "UnknownState", 1, 10));
 
         assertEquals(e.getMessage(), "Состояние UNKNOWNSTATE не найдено.");
     }
@@ -140,7 +140,7 @@ class BookingServiceTests {
 
         Mockito.when(userService.getUserById(anyLong()))
                 .thenReturn(userDto);
-        bookingService.getListAllBookingsUser(1L, "REJECTED");
+        bookingService.getListAllBookingsUser(1L, "REJECTED", 1, 10);
 
         verify(bookingRepository).findAllByBookerIdAndStatusOrderByStartDesc(anyLong(), eq(BookingStatus.REJECTED));
     }
@@ -293,7 +293,7 @@ class BookingServiceTests {
                 any())).thenReturn(List.of(testBooking));
         Mockito.when(bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(Mockito.anyLong(),
                 any())).thenReturn(List.of(testBooking));
-        List<BookingDto> bookings = bookingService.getListAllBookingsUser(testUser.getId(), state);
+        List<BookingDto> bookings = bookingService.getListAllBookingsUser(testUser.getId(), state, 1, 10);
 
         assertFalse(bookings.isEmpty());
         assertEquals(bookings.get(0).getId(), 1L);
