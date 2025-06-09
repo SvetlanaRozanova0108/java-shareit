@@ -15,10 +15,10 @@ ShareIt - это микросервисное Spring Boot приложение �
 - Docker
 - Maven
 
-Сервисы будут доступны:
+Доступность:
 
-Gateway: http://localhost:8080
-Server: http://localhost:9090
+- Gateway: http://localhost:8080
+- Server: http://localhost:9090
 
 API Endpoints:
 
